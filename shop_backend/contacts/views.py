@@ -1,3 +1,9 @@
-from django.shortcuts import render
+from rest_framework.viewsets import ModelViewSet
+from contacts.models import User
+from .serializers import UserRegisterSerializer
 
-# Create your views here.
+
+class UserRegisterViewSet(ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserRegisterSerializer
+    http_method_names = ['post']
