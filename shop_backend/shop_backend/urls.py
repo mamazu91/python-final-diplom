@@ -24,9 +24,9 @@ from rest_framework.authtoken import views
 from django.urls import path, include
 
 partner_router = DefaultRouter()
-partner_router.register('import', ShopImportViewSet, basename='shop_import')
-partner_router.register('states', ShopStateViewSet, basename='shop_state')
-partner_router.register('orders', ShopOrderViewSet, basename='shop_orders')
+partner_router.register('import', ShopImportViewSet, basename='partner_shop_import')
+partner_router.register('states', ShopStateViewSet, basename='partner_shop_state')
+partner_router.register('orders', UserOrderViewSet, basename='partner_shop_orders')
 
 client_router = DefaultRouter()
 client_router.register('reg', UserRegisterViewSet, basename='client_register')

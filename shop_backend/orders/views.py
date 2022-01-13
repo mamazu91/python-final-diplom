@@ -2,6 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 from .models import Order
 from .serializers import BasketSerializer, UserOrderSerializer
 from contacts.permissions import IsAuthenticatedClient
+from shops.permissions import IsAuthenticatedSupplier
 from django.db.models import Q
 from rest_framework.response import Response
 
@@ -30,7 +31,7 @@ class BasketViewSet(ModelViewSet):
 
 class UserOrderViewSet(ModelViewSet):
     serializer_class = UserOrderSerializer
-    permission_classes = [IsAuthenticatedClient]
+    permission_classes = [IsAuthenticatedClient | IsAuthenticatedSupplier]
     http_method_names = ['post', 'get']
 
     def get_queryset(self):
