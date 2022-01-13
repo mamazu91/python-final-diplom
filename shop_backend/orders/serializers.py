@@ -80,16 +80,25 @@ class UserOrderSerializer(serializers.ModelSerializer):
 
         with transaction.atomic():
             basket_contents = basket.contents.all()
-            new_order = Order.objects.create(status='new', user=request_user)
+            new_user_order = Order.objects.create(status='new', user=request_user)
 
-            for basket_content in basket_contents:
-                basket_content.id = None
-                basket_content.order_id = new_order.id
-                basket_content.save()
+            for basket_position in basket_contents:
+                # Creating a new user order with the same content as in the basket
+                basket_position.id = None
+                basket_position.order_id = new_user_order.id
+                basket_position.save()
+
+                # Splitting the new user order into multiple unique sub-orders for the suppliers
+                supplier = basket_position.product_info.shop.user
+                new_supplier_order, created = Order.objects.get_or_create(parent_order_id=new_user_order.id,
+                                                                          status='new',
+                                                                          user=supplier)
+                OrderContent.objects.create(product_info=basket_position.product_info, order=new_supplier_order,
+                                            quantity=basket_position.quantity)
 
             basket_contents.delete()
 
-        return new_order
+        return new_user_order
 
 
 class OrderContentSerializer(serializers.ModelSerializer):
