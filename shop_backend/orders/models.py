@@ -1,6 +1,5 @@
 from django.db import models
 from contacts.models import User
-from shops.models import Shop
 from products.models import ProductInfo
 
 
@@ -20,7 +19,7 @@ class Order(models.Model):
     positions = models.ManyToManyField(ProductInfo, through='OrderContent', blank=True, verbose_name='Список продуктов')
     created_at = models.DateTimeField(auto_now_add=True, blank=True,
                                       verbose_name='Дата создания')
-    status = models.CharField(max_length=15, choices=STATE_CHOICES, default='basket', verbose_name='Статус')
+    status = models.CharField(max_length=15, choices=STATE_CHOICES, default='basket', verbose_name='Состояние')
 
     class Meta:
         verbose_name = 'Заказ'
@@ -29,11 +28,20 @@ class Order(models.Model):
 
 
 class OrderContent(models.Model):
+    STATE_CHOICES = [
+        ('assembled', 'Собрана'),
+        ('canceled', 'Отменена'),
+        ('confirmed', 'Подтверждена'),
+        ('delivered', 'Доставлена'),
+        ('new', 'Новая'),
+        ('sent', 'Отправлена')
+    ]
     product_info = models.ForeignKey(ProductInfo, on_delete=models.CASCADE, related_name='contents', blank=True,
                                      verbose_name='Продукт')
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='contents', blank=True,
                               verbose_name='Заказ')
     quantity = models.PositiveIntegerField(verbose_name='Количество')
+    status = models.CharField(max_length=15, choices=STATE_CHOICES, default='new', verbose_name='Состояние')
 
     class Meta:
         verbose_name = 'Содержимое заказа'

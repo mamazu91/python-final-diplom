@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from rest_framework.routers import DefaultRouter
-from shops.views import ShopImportViewSet, ShopStateViewSet, ShopOrderViewSet, OpenShopViewSet
+from shops.views import ShopImportViewSet, ShopStateViewSet, OpenShopViewSet
 from contacts.views import UserRegisterViewSet
 from orders.views import BasketViewSet, UserOrderViewSet
 from products.views import ProductViewSet

@@ -32,7 +32,7 @@ class BasketViewSet(ModelViewSet):
 class UserOrderViewSet(ModelViewSet):
     serializer_class = UserOrderSerializer
     permission_classes = [IsAuthenticatedClient | IsAuthenticatedSupplier]
-    http_method_names = ['post', 'get']
+    http_method_names = ['get', 'patch']
 
     def get_queryset(self):
         return Order.objects.filter(~Q(status='basket'), user=self.request.user)

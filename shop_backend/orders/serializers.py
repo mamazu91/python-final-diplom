@@ -18,7 +18,7 @@ class BasketPositionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = OrderContent
-        fields = ['id', 'price', 'quantity']
+        fields = ['id', 'price', 'quantity', 'status']
 
 
 class BasketSerializer(serializers.ModelSerializer):
@@ -61,12 +61,12 @@ class BasketSerializer(serializers.ModelSerializer):
 
 
 class UserOrderSerializer(serializers.ModelSerializer):
-    positions = BasketPositionSerializer(read_only=True, many=True, source='contents')
-    total = serializers.SerializerMethodField('get_total')
+    positions = BasketPositionSerializer(read_only=True, many=True, required=False, source='contents')
+    total = serializers.SerializerMethodField('get_total', required=False)
 
     class Meta:
         model = Order
-        fields = ['id', 'total', 'positions']
+        fields = ['id', 'total', 'status', 'positions']
 
     @staticmethod
     def get_total(obj):
@@ -100,20 +100,25 @@ class UserOrderSerializer(serializers.ModelSerializer):
 
         return new_user_order
 
+    def update(self, instance, validated_data):
+        status = validated_data.get('status')
 
-class OrderContentSerializer(serializers.ModelSerializer):
-    id = serializers.SlugRelatedField(read_only=True, slug_field='product_id', source='product_info')
-    name = serializers.SlugRelatedField(read_only=True, slug_field='name', source='product_info.product')
-    price = serializers.SlugRelatedField(read_only=True, slug_field='price', source='product_info')
+        if not status:
+            raise ValidationError({'results': ['Provide new status for the order.']})
 
-    class Meta:
-        model = OrderContent
-        fields = ['id', 'name', 'quantity', 'price']
+        instance.status = status
+        instance.save()
 
+        supplier_order_positions = instance.contents.all()
+        for position in supplier_order_positions:
+            position.status = status
+            position.save()
 
-class OrderItemsSerializer(BasketSerializer):
-    items = OrderContentSerializer(many=True, allow_null=True, source='contents')
-    total = serializers.ReadOnlyField()
+        parent_order = Order.objects.get(id=instance.parent_order_id)
+        parent_order_positions = parent_order.contents.all()
+        for position in parent_order_positions:
+            if position in supplier_order_positions:
+                position.status = status
+                position.save()
 
-    class Meta(BasketSerializer.Meta):
-        fields = BasketSerializer.Meta.fields + ['total', 'items']
+        return instance
