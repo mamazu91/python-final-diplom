@@ -3,6 +3,7 @@ from orders.models import Order, OrderContent
 from products.models import ProductInfo
 from rest_framework.exceptions import ValidationError
 from django.db.models import F, Sum
+from django.db import transaction
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -57,6 +58,38 @@ class BasketSerializer(serializers.ModelSerializer):
             instance.save()
 
         return instance
+
+
+class UserOrderSerializer(serializers.ModelSerializer):
+    positions = BasketPositionSerializer(read_only=True, many=True, source='contents')
+    total = serializers.SerializerMethodField('get_total')
+
+    class Meta:
+        model = Order
+        fields = ['id', 'total', 'positions']
+
+    @staticmethod
+    def get_total(obj):
+        order_total = Order.objects.filter(id=obj.id).aggregate(
+            total=(Sum(F('contents__quantity') * F('positions__price'))))
+        return order_total['total']
+
+    def create(self, validated_data):
+        request_user = self.context['request'].user
+        basket = Order.objects.get(user=request_user, status='basket')
+
+        with transaction.atomic():
+            basket_contents = basket.contents.all()
+            new_order = Order.objects.create(status='new', user=request_user)
+
+            for basket_content in basket_contents:
+                basket_content.id = None
+                basket_content.order_id = new_order.id
+                basket_content.save()
+
+            basket_contents.delete()
+
+        return new_order
 
 
 class OrderContentSerializer(serializers.ModelSerializer):
