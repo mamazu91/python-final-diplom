@@ -3,6 +3,10 @@ from contacts.models import User
 from django.db import transaction
 from rest_framework.exceptions import ValidationError
 from orders.models import Order
+from rest_framework.authtoken.models import Token
+from django.core.mail import send_mail as send_confirm_mail
+from shop_backend import settings
+from django.shortcuts import get_object_or_404
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -38,6 +42,16 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             )
             new_user_basket.save()
 
+            new_user_confirm_token = Token.objects.create(user=new_user)
+            send_confirm_mail(
+                f'Netology diploma confirmation email.',
+                f'Hello user {new_user.email}! In order to confirm your account, '
+                f'please send this token {new_user_confirm_token} to /api/v1/confirm/ endpoint.',
+                settings.EMAIL_HOST_USER,
+                [new_user.email],
+                fail_silently=False
+            )
+
             return new_user
 
     def validate(self, data):
@@ -47,3 +61,23 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             raise ValidationError({'results': ['Passwords are different.']})
 
         return data
+
+
+class UserConfirmSerializer(serializers.ModelSerializer):
+    token = serializers.CharField(source='key')
+
+    class Meta:
+        model = User
+        fields = ['token']
+
+    def create(self, validated_data):
+        request_token = validated_data.pop('key')
+        db_token = get_object_or_404(Token, key=request_token)
+        user = User.objects.get(email=db_token.user)
+        if not user.is_confirmed:
+            user.is_confirmed = True
+            user.save()
+        else:
+            raise ValidationError({'results': ['This user has already confirmed his email.']})
+
+        return db_token

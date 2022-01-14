@@ -118,10 +118,8 @@ class UserOrderSerializer(serializers.ModelSerializer):
                 supplier = supplier_position.product_info.shop.user
 
             parent_order = Order.objects.get(id=instance.parent_order_id)
-            supplier = supplier_order_positions[0].product_info.shop.user
             parent_order_positions = parent_order.contents.filter(product_info__shop__user=supplier)
             for parent_position in parent_order_positions:
-                # if position.product_info.shop.user == supplier:
                 parent_position.status = status
                 parent_position.save()
 
