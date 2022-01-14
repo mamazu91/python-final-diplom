@@ -44,7 +44,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
             new_user_confirm_token = Token.objects.create(user=new_user)
             send_confirm_mail(
-                f'Netology diploma confirmation email.',
+                f'Ontology diploma confirmation email.',
                 f'Hello user {new_user.email}! In order to confirm your account, '
                 f'please send this token {new_user_confirm_token} to /api/v1/confirm/ endpoint.',
                 settings.EMAIL_HOST_USER,
@@ -75,6 +75,7 @@ class UserConfirmSerializer(serializers.ModelSerializer):
         db_token = get_object_or_404(Token, key=request_token)
         user = User.objects.get(email=db_token.user)
         if not user.is_confirmed:
+            db_token.delete()
             user.is_confirmed = True
             user.save()
         else:
