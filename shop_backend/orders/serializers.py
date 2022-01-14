@@ -104,21 +104,25 @@ class UserOrderSerializer(serializers.ModelSerializer):
         status = validated_data.get('status')
 
         if not status:
-            raise ValidationError({'results': ['Provide new status for the order.']})
+            raise ValidationError({'results': ['Provide a status for the order.']})
 
-        instance.status = status
-        instance.save()
+        with transaction.atomic():
+            instance.status = status
+            instance.save()
 
-        supplier_order_positions = instance.contents.all()
-        for position in supplier_order_positions:
-            position.status = status
-            position.save()
+            supplier_order_positions = instance.contents.all()
+            for supplier_position in supplier_order_positions:
+                supplier_position.status = status
+                supplier_position.save()
+            else:
+                supplier = supplier_position.product_info.shop.user
 
-        parent_order = Order.objects.get(id=instance.parent_order_id)
-        parent_order_positions = parent_order.contents.all()
-        for position in parent_order_positions:
-            if position in supplier_order_positions:
-                position.status = status
-                position.save()
+            parent_order = Order.objects.get(id=instance.parent_order_id)
+            supplier = supplier_order_positions[0].product_info.shop.user
+            parent_order_positions = parent_order.contents.filter(product_info__shop__user=supplier)
+            for parent_position in parent_order_positions:
+                # if position.product_info.shop.user == supplier:
+                parent_position.status = status
+                parent_position.save()
 
         return instance
