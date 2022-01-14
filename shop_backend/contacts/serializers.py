@@ -81,3 +81,25 @@ class UserConfirmSerializer(serializers.ModelSerializer):
             raise ValidationError({'results': ['This user has already confirmed his email.']})
 
         return db_token
+
+
+class UserPasswordSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True)
+
+    class Meta:
+        model = User
+        fields = ['password']
+
+    def update(self, instance, validated_data):
+        new_password = validated_data.pop('password')
+        if new_password:
+            instance.set_password(new_password)
+            instance.save()
+
+        return instance
+
+    def validate(self, data):
+        if not data.get('password'):
+            raise ValidationError({'results': ['Provide a new password.']})
+
+        return data

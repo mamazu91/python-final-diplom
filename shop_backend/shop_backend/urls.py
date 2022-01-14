@@ -15,7 +15,7 @@ Including another URLconf
 """
 from rest_framework.routers import DefaultRouter
 from shops.views import ShopImportViewSet, ShopStateViewSet, OpenShopViewSet
-from contacts.views import UserRegisterViewSet, UserConfirmViewSet
+from contacts.views import UserRegisterViewSet, UserConfirmViewSet, UserPasswordViewSet
 from orders.views import BasketViewSet, UserOrderViewSet
 from products.views import ProductViewSet
 from categories.views import CategoryViewSet
@@ -33,6 +33,7 @@ client_router.register('reg', UserRegisterViewSet, basename='client_register')
 client_router.register('confirm', UserConfirmViewSet, basename='client_confirm')
 client_router.register('basket', BasketViewSet, basename='client_basket')
 client_router.register('orders', UserOrderViewSet, basename='client_orders')
+client_router.register('pwd', UserPasswordViewSet, basename='password_change')
 
 shop_router = DefaultRouter()
 shop_router.register('shops', OpenShopViewSet, basename='shop_shops')

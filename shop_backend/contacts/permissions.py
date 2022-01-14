@@ -8,4 +8,4 @@ class IsAuthenticatedClient(BasePermission):
                         request.user.is_supplier or request.user.is_staff))
 
     def has_object_permission(self, request, view, obj):
-        return obj.user == request.user
+        return obj.email == request.user
