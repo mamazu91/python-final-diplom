@@ -44,12 +44,22 @@ Authorization
 Token ffb61b74e42a3e394830dff2702392b2393e6de9
 ```
 
+Пример ответа:
 ```python
 {
     "id": 1,
     "name": "Связной",
     "filename": "shop1.yaml"
 }
+```
+
+
+
+
+
+
+
+
 
 # Работа с API клиента
 ## Создание пользователя
