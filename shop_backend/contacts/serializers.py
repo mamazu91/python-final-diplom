@@ -43,7 +43,6 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             new_user_basket.save()
 
             new_user_confirm_token = Token.objects.create(user=new_user)
-
             send_confirm_mail(
                 f'Netology diploma confirmation email.',
                 f'Hello user {new_user.email}! \n\n In order to confirm your account, '

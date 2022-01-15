@@ -4,6 +4,7 @@ from products.models import ProductInfo
 from rest_framework.exceptions import ValidationError
 from django.db.models import F, Sum
 from django.db import transaction
+from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail as send_new_order_mail
 from shop_backend import settings
 
@@ -46,7 +47,7 @@ class BasketSerializer(serializers.ModelSerializer):
         for basket_position in basket_positions:
             basket_position_id = basket_position.get('product_info').get('id')
             basket_position_quantity = basket_position.get('quantity')
-            position_in_stock = ProductInfo.objects.get(id=basket_position_id)
+            position_in_stock = get_object_or_404(ProductInfo, id=basket_position_id)
 
             if basket_position.get('quantity') > position_in_stock.quantity:
                 raise ValidationError(
@@ -66,10 +67,11 @@ class BasketSerializer(serializers.ModelSerializer):
 class UserOrderSerializer(serializers.ModelSerializer):
     positions = BasketPositionSerializer(read_only=True, many=True, required=False, source='contents')
     total = serializers.SerializerMethodField('get_total', required=False)
+    delivery_address = serializers.CharField(required=True)
 
     class Meta:
         model = Order
-        fields = ['id', 'total', 'status', 'positions']
+        fields = ['id', 'total', 'status', 'positions', 'delivery_address']
 
     @staticmethod
     def get_total(obj):
@@ -80,10 +82,11 @@ class UserOrderSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         request_user = self.context['request'].user
         basket = Order.objects.get(user=request_user, status='basket')
+        delivery_address = validated_data.pop('delivery_address')
 
         with transaction.atomic():
             basket_contents = basket.contents.all()
-            new_user_order = Order.objects.create(status='new', user=request_user)
+            new_user_order = Order.objects.create(status='new', user=request_user, delivery_address=delivery_address)
             suppliers = set()
 
             for basket_position in basket_contents:
@@ -117,15 +120,13 @@ class UserOrderSerializer(serializers.ModelSerializer):
 
         # Notifying supplier on new order
         for supplier in suppliers:
-            print()
-            supplier_orders = [str(order.id) for order in
-                               Order.objects.filter(parent_order_id=new_user_order.id, user=supplier)]
+            supplier_order = Order.objects.get(parent_order_id=new_user_order.id, user=supplier)
             send_new_order_mail(
-                'A new order!'
-                f'Dear {supplier}!',
-                f'This email is to notify you that a new order has been created with the shop(s) you manage.\n\n'
-                f'Order IDs: {",".join(supplier_orders)}. '
-                f'Please refer to API /api/v1/partner/orders/ to see their contents.',
+                f'A new order!',
+                f'Dear {supplier}!\n\n'
+                f'This email is to notify you that a new order has been created with one of the shops you manage. '
+                f'Order ID: {str(supplier_order.id)}.\n\n'
+                f'Please refer to API /api/v1/partner/orders/{str(supplier_order.id)}/ to see its contents.',
                 settings.EMAIL_HOST_USER,
                 [supplier],
                 fail_silently=True

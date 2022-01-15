@@ -16,6 +16,7 @@ class UserManager(BaseUserManager):
     def create_supplier(self, email, password):
         user = self.create_user(email, password=password)
         user.is_supplier = True
+        user.is_confirmed = True
         user.save(using=self._db)
         return user
 
@@ -23,6 +24,7 @@ class UserManager(BaseUserManager):
         user = self.create_user(email, password=password)
         user.is_superuser = True
         user.is_staff = True
+        user.is_confirmed = True
         user.save(using=self._db)
         return user
 

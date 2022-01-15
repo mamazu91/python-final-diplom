@@ -16,6 +16,8 @@ class Order(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, blank=True,
                                       verbose_name='Дата создания')
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='basket', verbose_name='Состояние')
+    delivery_address = models.CharField(max_length=255, default=None, verbose_name='Адрес доставки', blank=True,
+                                        null=True)
 
     class Meta:
         verbose_name = 'Заказ'
