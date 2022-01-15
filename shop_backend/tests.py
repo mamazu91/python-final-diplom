@@ -1,2 +1,7 @@
-a = ["1", "2", "3", "4"]
-print('\n'.join(a))
+a = set()
+a.add(1)
+a.add(2)
+a.add(1)
+
+for jj in a:
+    print(jj)

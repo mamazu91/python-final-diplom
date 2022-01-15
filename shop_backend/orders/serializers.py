@@ -84,6 +84,7 @@ class UserOrderSerializer(serializers.ModelSerializer):
         with transaction.atomic():
             basket_contents = basket.contents.all()
             new_user_order = Order.objects.create(status='new', user=request_user)
+            suppliers = set()
 
             for basket_position in basket_contents:
                 # Creating a new user order with the same content as in the basket
@@ -93,59 +94,68 @@ class UserOrderSerializer(serializers.ModelSerializer):
 
                 # Splitting the new user order into multiple unique sub-orders for the suppliers
                 supplier = basket_position.product_info.shop.user
+                suppliers.add(supplier)
                 new_supplier_order, created = Order.objects.get_or_create(parent_order_id=new_user_order.id,
                                                                           status='new',
                                                                           user=supplier)
                 OrderContent.objects.create(product_info=basket_position.product_info, order=new_supplier_order,
                                             quantity=basket_position.quantity)
-
+        # Notifying client on new order
         nl = '\n'
         user_order_items = [str(f'* {item.quantity} x {item.product_info.product.name}, '
                                 f'total: {item.quantity * item.product_info.price}') for item in basket_contents]
         send_new_order_mail(
-            f'Your new order.',
-            f'Hello user {request_user.email}!\n\nThis email is to notify you that we have received '
-            f'your order #{new_user_order.id}.\n\nItems: \n{nl.join(user_order_items)}'
+            f'Your new order is here!',
+            f'Hello user {request_user.email}!\n\n'
+            f'This email is to notify you that we have received your order #{new_user_order.id}.'
+            f'\n\nItems: \n{nl.join(user_order_items)}'
             f'\n\nWe will notify you once we have shipped it.',
             settings.EMAIL_HOST_USER,
             [request_user.email],
             fail_silently=True
         )
 
+        # Notifying supplier on new order
+        for supplier in suppliers:
+            print()
+            supplier_orders = [str(order.id) for order in
+                               Order.objects.filter(parent_order_id=new_user_order.id, user=supplier)]
+            send_new_order_mail(
+                'A new order!'
+                f'Dear {supplier}!',
+                f'This email is to notify you that a new order has been created with the shop(s) you manage.\n\n'
+                f'Order IDs: {",".join(supplier_orders)}. '
+                f'Please refer to API /api/v1/partner/orders/ to see their contents.',
+                settings.EMAIL_HOST_USER,
+                [supplier],
+                fail_silently=True
+            )
+
         basket_contents.delete()
-        # send_new_order_mail(
-        #     f'Dear supplier!',
-        #     f'Hello user {request_user.email}! \n\n This email is to notify you that we have received '
-        #     f'your order {new_user_order.id}. We will notify you once we have shipped it.',
-        #     settings.EMAIL_HOST_USER,
-        #     [request_user.email],
-        #     fail_silently=True
-        # )
 
         return new_user_order
 
+    def update(self, instance, validated_data):
+        status = validated_data.get('status')
 
-def update(self, instance, validated_data):
-    status = validated_data.get('status')
+        if not status:
+            raise ValidationError({'results': ['Provide a status for the order.']})
 
-    if not status:
-        raise ValidationError({'results': ['Provide a status for the order.']})
+        with transaction.atomic():
+            instance.status = status
+            instance.save()
 
-    with transaction.atomic():
-        instance.status = status
-        instance.save()
+            supplier_order_positions = instance.contents.all()
+            for supplier_position in supplier_order_positions:
+                supplier_position.status = status
+                supplier_position.save()
+            else:
+                supplier = supplier_position.product_info.shop.user
 
-        supplier_order_positions = instance.contents.all()
-        for supplier_position in supplier_order_positions:
-            supplier_position.status = status
-            supplier_position.save()
-        else:
-            supplier = supplier_position.product_info.shop.user
+            parent_order = Order.objects.get(id=instance.parent_order_id)
+            parent_order_positions = parent_order.contents.filter(product_info__shop__user=supplier)
+            for parent_position in parent_order_positions:
+                parent_position.status = status
+                parent_position.save()
 
-        parent_order = Order.objects.get(id=instance.parent_order_id)
-        parent_order_positions = parent_order.contents.filter(product_info__shop__user=supplier)
-        for parent_position in parent_order_positions:
-            parent_position.status = status
-            parent_position.save()
-
-    return instance
+        return instance
