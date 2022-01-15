@@ -45,3 +45,4 @@ User.objects.create_supplier(email='supplier@gmail.com', password='password')
 Authorization
 Token ffb61b74e42a3e394830dff2702392b2393e6de9
 ```
+
