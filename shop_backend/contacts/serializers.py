@@ -43,13 +43,14 @@ class UserRegisterSerializer(serializers.ModelSerializer):
             new_user_basket.save()
 
             new_user_confirm_token = Token.objects.create(user=new_user)
+
             send_confirm_mail(
-                f'Ontology diploma confirmation email.',
-                f'Hello user {new_user.email}! In order to confirm your account, '
+                f'Netology diploma confirmation email.',
+                f'Hello user {new_user.email}! \n\n In order to confirm your account, '
                 f'please send this token {new_user_confirm_token} to /api/v1/confirm/ endpoint.',
                 settings.EMAIL_HOST_USER,
                 [new_user.email],
-                fail_silently=False
+                fail_silently=True
             )
 
             return new_user

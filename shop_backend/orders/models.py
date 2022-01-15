@@ -5,13 +5,9 @@ from products.models import ProductInfo
 
 class Order(models.Model):
     STATUS_CHOICES = [
-        ('assembled', 'Собран'),
-        ('basket', 'Статус корзины'),
-        ('cancelled', 'Отменен'),
-        ('confirmed', 'Подтвержден'),
-        ('delivered', 'Доставлен'),
         ('new', 'Новый'),
-        ('sent', 'Отправлен')
+        ('in_delivery', 'В доставке'),
+        ('completed', 'Завершен')
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_orders', blank=True,
                              verbose_name='Пользователь')
@@ -29,12 +25,9 @@ class Order(models.Model):
 
 class OrderContent(models.Model):
     STATUS_CHOICES = [
-        ('assembled', 'Собрана'),
-        ('cancelled', 'Отменена'),
-        ('confirmed', 'Подтверждена'),
-        ('delivered', 'Доставлена'),
         ('new', 'Новая'),
-        ('sent', 'Отправлена')
+        ('shipped', 'Отправлена'),
+        ('delivered', 'Доставлена')
     ]
     product_info = models.ForeignKey(ProductInfo, on_delete=models.CASCADE, related_name='contents', blank=True,
                                      verbose_name='Продукт')

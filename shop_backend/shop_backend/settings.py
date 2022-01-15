@@ -135,9 +135,9 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'contacts.User'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.mail.ru'
-EMAIL_HOST_USER = 'netology_mamazu91@mail.ru'
-EMAIL_HOST_PASSWORD = 'S9aJwXHG2Vmq1jcJmwKF'
+EMAIL_HOST = 'smtp.mail.yahoo.com'
+EMAIL_HOST_USER = 'basketman91@yahoo.com'
+EMAIL_HOST_PASSWORD = 'gxopciwoltouzilu'
 EMAIL_PORT = '465'
 EMAIL_USE_SSL = True
 SERVER_EMAIL = EMAIL_HOST_USER

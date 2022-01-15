@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from .models import Order
 from .serializers import BasketSerializer, UserOrderSerializer
-from contacts.permissions import IsAuthenticatedClient
+from .permissions import IsAuthenticatedClient
 from shops.permissions import IsAuthenticatedSupplier
 from django.db.models import Q
 from rest_framework.response import Response

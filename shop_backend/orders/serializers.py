@@ -4,6 +4,8 @@ from products.models import ProductInfo
 from rest_framework.exceptions import ValidationError
 from django.db.models import F, Sum
 from django.db import transaction
+from django.core.mail import send_mail as send_new_order_mail
+from shop_backend import settings
 
 
 class OrderSerializer(serializers.ModelSerializer):
@@ -14,11 +16,12 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class BasketPositionSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source='product_info.id')
+    name = serializers.SlugRelatedField(read_only=True, slug_field='name', source='product_info.product')
     price = serializers.SlugRelatedField(read_only=True, slug_field='price', source='product_info')
 
     class Meta:
         model = OrderContent
-        fields = ['id', 'price', 'quantity', 'status']
+        fields = ['id', 'name', 'price', 'quantity', 'status']
 
 
 class BasketSerializer(serializers.ModelSerializer):
@@ -96,31 +99,53 @@ class UserOrderSerializer(serializers.ModelSerializer):
                 OrderContent.objects.create(product_info=basket_position.product_info, order=new_supplier_order,
                                             quantity=basket_position.quantity)
 
-            basket_contents.delete()
+        nl = '\n'
+        user_order_items = [str(f'* {item.quantity} x {item.product_info.product.name}, '
+                                f'total: {item.quantity * item.product_info.price}') for item in basket_contents]
+        send_new_order_mail(
+            f'Your new order.',
+            f'Hello user {request_user.email}!\n\nThis email is to notify you that we have received '
+            f'your order #{new_user_order.id}.\n\nItems: \n{nl.join(user_order_items)}'
+            f'\n\nWe will notify you once we have shipped it.',
+            settings.EMAIL_HOST_USER,
+            [request_user.email],
+            fail_silently=True
+        )
+
+        basket_contents.delete()
+        # send_new_order_mail(
+        #     f'Dear supplier!',
+        #     f'Hello user {request_user.email}! \n\n This email is to notify you that we have received '
+        #     f'your order {new_user_order.id}. We will notify you once we have shipped it.',
+        #     settings.EMAIL_HOST_USER,
+        #     [request_user.email],
+        #     fail_silently=True
+        # )
 
         return new_user_order
 
-    def update(self, instance, validated_data):
-        status = validated_data.get('status')
 
-        if not status:
-            raise ValidationError({'results': ['Provide a status for the order.']})
+def update(self, instance, validated_data):
+    status = validated_data.get('status')
 
-        with transaction.atomic():
-            instance.status = status
-            instance.save()
+    if not status:
+        raise ValidationError({'results': ['Provide a status for the order.']})
 
-            supplier_order_positions = instance.contents.all()
-            for supplier_position in supplier_order_positions:
-                supplier_position.status = status
-                supplier_position.save()
-            else:
-                supplier = supplier_position.product_info.shop.user
+    with transaction.atomic():
+        instance.status = status
+        instance.save()
 
-            parent_order = Order.objects.get(id=instance.parent_order_id)
-            parent_order_positions = parent_order.contents.filter(product_info__shop__user=supplier)
-            for parent_position in parent_order_positions:
-                parent_position.status = status
-                parent_position.save()
+        supplier_order_positions = instance.contents.all()
+        for supplier_position in supplier_order_positions:
+            supplier_position.status = status
+            supplier_position.save()
+        else:
+            supplier = supplier_position.product_info.shop.user
 
-        return instance
+        parent_order = Order.objects.get(id=instance.parent_order_id)
+        parent_order_positions = parent_order.contents.filter(product_info__shop__user=supplier)
+        for parent_position in parent_order_positions:
+            parent_position.status = status
+            parent_position.save()
+
+    return instance
