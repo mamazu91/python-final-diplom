@@ -6,7 +6,7 @@
 Обязательные параметры: **email** - имейл поставщика (string), **password** - пароль (string).
 
 Пример создания поставщика:
-```json
+```python
 json manage.py shell
 from contacts.models import User
 User.objects.create_supplier(email='supplier@gmail.com', password='password')
@@ -26,8 +26,8 @@ User.objects.create_supplier(email='supplier@gmail.com', password='password')
 }
 ```
 
-```json
 Пример успешного ответа:
+```json
 {
     "token": "ffb61b74e42a3e394830dff2702392b2393e6de9"
 }
@@ -39,7 +39,7 @@ User.objects.create_supplier(email='supplier@gmail.com', password='password')
 Обязательные параметры: **password** - новый пароль (string).
 
 Пример заголовка:
-```json
+```
 Authorization
 Token ffb61b74e42a3e394830dff2702392b2393e6de9
 ```
@@ -69,7 +69,7 @@ Token ffb61b74e42a3e394830dff2702392b2393e6de9
 ```
 
 Пример заголовка:
-```json
+```
 Authorization
 Token ffb61b74e42a3e394830dff2702392b2393e6de9
 ```
@@ -107,7 +107,7 @@ Token ffb61b74e42a3e394830dff2702392b2393e6de9
 Обязательные параметры: **is_closed** - указатель на состояние нового магазина (boolean).
 
 Пример заголовка:
-```json
+```
 Authorization
 Token ffb61b74e42a3e394830dff2702392b2393e6de9
 ```
@@ -132,7 +132,7 @@ Token ffb61b74e42a3e394830dff2702392b2393e6de9
 Для получения списка текущих заказов подконтрольных магазинов отправьте **GET** запрос на API **/api/v1/partner/orders/** с указанием заголовка, содержащего токен поставщика.
 
 Пример заголовка:
-```json
+```
 Authorization
 Token ffb61b74e42a3e394830dff2702392b2393e6de9
 ```
