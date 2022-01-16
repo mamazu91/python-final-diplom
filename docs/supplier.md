@@ -6,7 +6,7 @@
 Обязательные параметры: **email** - имейл поставщика (string), **password** - пароль (string).
 
 Пример создания поставщика:
-```json
+```python
 json manage.py shell
 from contacts.models import User
 User.objects.create_supplier(email='supplier@gmail.com', password='password')
