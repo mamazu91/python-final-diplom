@@ -299,7 +299,7 @@ Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 
 Обязательные параметры: **delivery_address** - адрес доставки товаров (string).
 
-```json
+```
 Authorization
 Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 ```
