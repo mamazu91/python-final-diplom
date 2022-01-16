@@ -14,7 +14,7 @@
 - **position** должность (string)
 
 Пример запроса:
-```python
+```json
 {
     "first_name": "Maksim",
     "middle_name": "Andreevich",
@@ -23,19 +23,19 @@
     "password": "password",
     "password_repeat": "password",
     "company": "Freelancer",
-    "position": "Python Developer"
+    "position": "json Developer"
 }
 ```
 
 Пример успешного ответа:
-```python
+```json
 {
     "first_name": "Maksim",
     "middle_name": "Andreevich",
     "last_name": "Ksenofontov",
     "email": "client@mail.ru",
     "company": "Freelancer",
-    "position": "Python Developer"
+    "position": "json Developer"
 }
 ```
 
@@ -45,14 +45,14 @@
 Для подтверждения имейла необходимо отправить **POST** запрос с полученным токеном на API **/api/v1/confirm/**.
 
 Пример запроса:
-```python
+```json
 {
     "token": "a5cb2f336392b5d286d51babc8011b189824c09c"
 }
 ```
 
 Пример успешного ответа:
-```python
+```json
 {
     "token": null
 }
@@ -66,20 +66,20 @@
 Обязательные параметры: **password** - новый пароль (string).
 
 Пример заголовка:
-```python
+```json
 Authorization
 Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 ```
 
 Пример тела запроса:
-```python
+```json
 {
     "password": "!P@$$W0RD!"
 }
 ```
 
 Пример успешного ответа:
-```python
+```json
 {}
 ```
 
@@ -89,14 +89,14 @@ Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 Обязательные параметры: **username** - имейл пользователя (string), **password** - пароль (string).
 
 Пример тела запроса:
-```python
+```json
 {
     "username": "client@gmail.com",
     "password": "password"
 }
 ```
 
-```python
+```json
 Пример успешного ответа:
 {
     "token": "fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188"
@@ -107,7 +107,7 @@ Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 Для получения списка продуктов со всех магазинов отправьте **GET** запрос на API **/api/v1/products/**.
 
 Пример успешного ответа:
-```python
+```json
 [
     {
         "id": 5,
@@ -123,7 +123,7 @@ Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 Для получения детальной информации по конкретному продукту отправьте **GET** запрос на тот же API с указанием его идентификатора. Например: **/api/v1/products/5/**.
 
 Пример успешного ответа:
-```python
+```json
 {
     "id": 5,
     "name": "Бананы",
@@ -146,7 +146,7 @@ Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 Помимо этого API так же предоставляет возможность фильтрации по категории и магазину. Для этого необходимо добавить опциональные параметры **shop** и/или **category** в **GET** запрос. Например: **/api/v1/products/?shop=1&category=1**.
 
 Пример успешного ответа:
-```python
+```json
 [
     {
         "id": 4,
@@ -163,13 +163,13 @@ Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 Для отображения текущих товаров в корзине отправьте **GET** запрос на API **/api/v1/basket/** с указанием заголовка, содержащего токен пользователя.
 
 Пример заголовка:
-```python
+```json
 Authorization
 Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 ```
 
 Пример успешного ответа:
-```python
+```json
 [
     {
         "id": 1,
@@ -195,13 +195,13 @@ Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 - **quantity** - количество добавляемых позиций (integer)
 
 Пример заголовка:
-```python
+```json
 Authorization
 Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 ```
 
 Пример тела запроса:
-```python
+```json
 {
     "positions": [
         {
@@ -217,7 +217,7 @@ Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 ```
 
 Пример успешного ответа:
-```python
+```json
 {
     "id": 1,
     "total": 558000,
@@ -244,13 +244,13 @@ Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 Для очистки корзины отправьте **PATCH** запрос на API **/api/v1/basket/1/** с указанием идентификатора корзины, а так же заголовка, содержащего токен пользователя.
 
 Пример заголовка:
-```python
+```json
 Authorization
 Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 ```
 
 Пример успешного ответа:
-```python
+```json
 {
     "id": 1,
     "total": null,
@@ -262,13 +262,13 @@ Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 Для получения списка имеющихся заказов отправьте **GET** запрос на API **/api/v1/orders/** с указанием заголовка, содержащего токен пользователя.
 
 Пример заголовка:
-```python
+```json
 Authorization
 Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 ```
 
 Пример успешного ответа:
-```python
+```json
 [
     {
         "id": 9,
@@ -299,20 +299,20 @@ Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 
 Обязательные параметры: **delivery_address** - адрес доставки товаров (string).
 
-```python
+```json
 Authorization
 Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 ```
 
 Пример тела запроса:
-```python
+```json
 {
     "delivery_address": "Saint Petersburg, Afonskaya 20-121"
 }
 ```
 
 Пример успешного ответа:
-```python
+```json
 {
     "id": 13,
     "total": 558000,

@@ -6,8 +6,8 @@
 Обязательные параметры: **email** - имейл поставщика (string), **password** - пароль (string).
 
 Пример создания поставщика:
-```python
-python manage.py shell
+```json
+json manage.py shell
 from contacts.models import User
 User.objects.create_supplier(email='supplier@gmail.com', password='password')
 ```
@@ -19,14 +19,14 @@ User.objects.create_supplier(email='supplier@gmail.com', password='password')
 Обязательные параметры: **username** - имейл пользователя (string), **password** - пароль (string).
 
 Пример тела запроса:
-```python
+```json
 {
     "username": "supplier@gmail.com",
     "password": "password"
 }
 ```
 
-```python
+```json
 Пример успешного ответа:
 {
     "token": "ffb61b74e42a3e394830dff2702392b2393e6de9"
@@ -39,20 +39,20 @@ User.objects.create_supplier(email='supplier@gmail.com', password='password')
 Обязательные параметры: **password** - новый пароль (string).
 
 Пример заголовка:
-```python
+```json
 Authorization
 Token ffb61b74e42a3e394830dff2702392b2393e6de9
 ```
 
 Пример тела запроса:
-```python
+```json
 {
     "password": "!P@$$W0RD!"
 }
 ```
 
 Пример успешного ответа:
-```python
+```json
 {}
 ```
 
@@ -62,20 +62,20 @@ Token ffb61b74e42a3e394830dff2702392b2393e6de9
 Обязательные параметры: **filename** - абсолютный или относительный путь до файла с товарами на файловой системе (string).
 
 Пример тела запроса:
-```python
+```json
 {
     "filename" : "shop1.yaml"
 }
 ```
 
 Пример заголовка:
-```python
+```json
 Authorization
 Token ffb61b74e42a3e394830dff2702392b2393e6de9
 ```
 
 Пример успешного ответа:
-```python
+```json
 {
     "id": 1,
     "name": "Связной",
@@ -85,13 +85,13 @@ Token ffb61b74e42a3e394830dff2702392b2393e6de9
 
 ## Получение списка состояний магазинов
 Для получения списка текущих состояний подконтрольных магазинов отправьте **GET** запрос на API **/api/v1/partner/states/** с указанием заголовка, содержащего токен поставщика.
-```python
+```json
 Authorization
 Token ffb61b74e42a3e394830dff2702392b2393e6de9
 ```
 
 Пример успешного ответа:
-```python
+```json
 [
     {
         "id": 1,
@@ -107,20 +107,20 @@ Token ffb61b74e42a3e394830dff2702392b2393e6de9
 Обязательные параметры: **is_closed** - указатель на состояние нового магазина (boolean).
 
 Пример заголовка:
-```python
+```json
 Authorization
 Token ffb61b74e42a3e394830dff2702392b2393e6de9
 ```
 
 Пример тела запроса:
-```python
+```json
 {
     "is_closed": false
 }
 ```
 
 Пример успешного ответа:
-```python
+```json
 {
     "id": 1,
     "name": "Связной",
@@ -132,13 +132,13 @@ Token ffb61b74e42a3e394830dff2702392b2393e6de9
 Для получения списка текущих заказов подконтрольных магазинов отправьте **GET** запрос на API **/api/v1/partner/orders/** с указанием заголовка, содержащего токен поставщика.
 
 Пример заголовка:
-```python
+```json
 Authorization
 Token ffb61b74e42a3e394830dff2702392b2393e6de9
 ```
 
 Пример успешного ответа:
-```python
+```json
 [
     {
         "id": 10,
