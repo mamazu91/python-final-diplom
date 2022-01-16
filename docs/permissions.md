@@ -1,5 +1,5 @@
-|   |who has access   |
-|---|---|---|---|
+|\\\\\   |who has access   |
+|---|---|
 |POST /api/v1/reg/   |anybody   |
 |POST /api/v1/confirm/   |anybody   |
 |GET /api/v1/basket/   |clients   |
