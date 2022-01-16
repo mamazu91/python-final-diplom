@@ -100,7 +100,10 @@ class UserOrderSerializer(serializers.ModelSerializer):
                 suppliers.add(supplier)
                 new_supplier_order, created = Order.objects.get_or_create(parent_order_id=new_user_order.id,
                                                                           status='new',
-                                                                          user=supplier)
+                                                                          user=supplier,
+                                                                          defaults={
+                                                                              'delivery_address': delivery_address
+                                                                          })
                 OrderContent.objects.create(product_info=basket_position.product_info, order=new_supplier_order,
                                             quantity=basket_position.quantity)
         # Notifying client on new order
@@ -136,27 +139,27 @@ class UserOrderSerializer(serializers.ModelSerializer):
 
         return new_user_order
 
-    def update(self, instance, validated_data):
-        status = validated_data.get('status')
-
-        if not status:
-            raise ValidationError({'results': ['Provide a status for the order.']})
-
-        with transaction.atomic():
-            instance.status = status
-            instance.save()
-
-            supplier_order_positions = instance.contents.all()
-            for supplier_position in supplier_order_positions:
-                supplier_position.status = status
-                supplier_position.save()
-            else:
-                supplier = supplier_position.product_info.shop.user
-
-            parent_order = Order.objects.get(id=instance.parent_order_id)
-            parent_order_positions = parent_order.contents.filter(product_info__shop__user=supplier)
-            for parent_position in parent_order_positions:
-                parent_position.status = status
-                parent_position.save()
-
-        return instance
+    # def update(self, instance, validated_data):
+    #     status = validated_data.get('status')
+    #
+    #     if not status:
+    #         raise ValidationError({'results': ['Provide a status for the order.']})
+    #
+    #     with transaction.atomic():
+    #         instance.status = status
+    #         instance.save()
+    #
+    #         supplier_order_positions = instance.contents.all()
+    #         for supplier_position in supplier_order_positions:
+    #             supplier_position.status = status
+    #             supplier_position.save()
+    #         else:
+    #             supplier = supplier_position.product_info.shop.user
+    #
+    #         parent_order = Order.objects.get(id=instance.parent_order_id)
+    #         parent_order_positions = parent_order.contents.filter(product_info__shop__user=supplier)
+    #         for parent_position in parent_order_positions:
+    #             parent_position.status = status
+    #             parent_position.save()
+    #
+    #     return instance
