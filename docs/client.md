@@ -66,7 +66,7 @@
 Обязательные параметры: **password** - новый пароль (string).
 
 Пример заголовка:
-```json
+```
 Authorization
 Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 ```
@@ -195,7 +195,7 @@ Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 - **quantity** - количество добавляемых позиций (integer)
 
 Пример заголовка:
-```json
+```
 Authorization
 Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 ```
@@ -244,7 +244,7 @@ Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 Для очистки корзины отправьте **PATCH** запрос на API **/api/v1/basket/1/** с указанием идентификатора корзины, а так же заголовка, содержащего токен пользователя.
 
 Пример заголовка:
-```json
+```
 Authorization
 Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 ```
@@ -262,7 +262,7 @@ Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 Для получения списка имеющихся заказов отправьте **GET** запрос на API **/api/v1/orders/** с указанием заголовка, содержащего токен пользователя.
 
 Пример заголовка:
-```json
+```
 Authorization
 Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 ```
@@ -299,7 +299,8 @@ Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 
 Обязательные параметры: **delivery_address** - адрес доставки товаров (string).
 
-```json
+Пример заголовка:
+```
 Authorization
 Token fc1351ddd4a1bb4e235f063aa0e0a0236e0cb188
 ```
