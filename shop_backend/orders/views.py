@@ -1,8 +1,9 @@
 from rest_framework.viewsets import ModelViewSet
 from .models import Order
-from .serializers import BasketSerializer
-from contacts.permissions import IsAuthenticatedClient
-from django.db.models import F, Sum, Q
+from .serializers import BasketSerializer, UserOrderSerializer
+from .permissions import IsAuthenticatedClient
+from shops.permissions import IsAuthenticatedSupplier
+from django.db.models import Q
 from rest_framework.response import Response
 
 
@@ -29,19 +30,9 @@ class BasketViewSet(ModelViewSet):
 
 
 class UserOrderViewSet(ModelViewSet):
-    serializer_class = BasketSerializer
-    permission_classes = [IsAuthenticatedClient]
-    http_method_names = ['get', 'post']
+    serializer_class = UserOrderSerializer
+    permission_classes = [IsAuthenticatedClient | IsAuthenticatedSupplier]
+    http_method_names = ['post', 'get', 'patch']
 
     def get_queryset(self):
         return Order.objects.filter(~Q(status='basket'), user=self.request.user)
-
-    # def update(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     instance.status = 'new'
-    #     instance.save()
-    #     serializer = OrderSerializer(instance, data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     super().perform_update(serializer)
-    #
-    #     return Response(serializer.data)

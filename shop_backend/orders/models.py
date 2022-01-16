@@ -1,27 +1,23 @@
 from django.db import models
 from contacts.models import User
-from shops.models import Shop
 from products.models import ProductInfo
 
 
 class Order(models.Model):
-    STATE_CHOICES = [
-        ('assembled', 'Собран'),
-        ('basket', 'Статус корзины'),
-        ('canceled', 'Отменен'),
-        ('confirmed', 'Подтвержден'),
-        ('delivered', 'Доставлен'),
+    STATUS_CHOICES = [
         ('new', 'Новый'),
-        ('sent', 'Отправлен')
+        ('in_delivery', 'В доставке'),
+        ('completed', 'Завершен')
     ]
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='user_orders', blank=True,
                              verbose_name='Пользователь')
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='orders', blank=True, null=True,
-                             verbose_name='Магазин')
+    parent_order_id = models.PositiveIntegerField(default=0, verbose_name='Внутренний идентификатор категории')
     positions = models.ManyToManyField(ProductInfo, through='OrderContent', blank=True, verbose_name='Список продуктов')
     created_at = models.DateTimeField(auto_now_add=True, blank=True,
                                       verbose_name='Дата создания')
-    status = models.CharField(max_length=15, choices=STATE_CHOICES, default='basket', verbose_name='Статус')
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='basket', verbose_name='Состояние')
+    delivery_address = models.CharField(max_length=255, default=None, verbose_name='Адрес доставки', blank=True,
+                                        null=True)
 
     class Meta:
         verbose_name = 'Заказ'
@@ -30,11 +26,17 @@ class Order(models.Model):
 
 
 class OrderContent(models.Model):
+    STATUS_CHOICES = [
+        ('new', 'Новая'),
+        ('shipped', 'Отправлена'),
+        ('delivered', 'Доставлена')
+    ]
     product_info = models.ForeignKey(ProductInfo, on_delete=models.CASCADE, related_name='contents', blank=True,
                                      verbose_name='Продукт')
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='contents', blank=True,
                               verbose_name='Заказ')
     quantity = models.PositiveIntegerField(verbose_name='Количество')
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='new', verbose_name='Состояние')
 
     class Meta:
         verbose_name = 'Содержимое заказа'

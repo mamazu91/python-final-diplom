@@ -16,6 +16,7 @@ class UserManager(BaseUserManager):
     def create_supplier(self, email, password):
         user = self.create_user(email, password=password)
         user.is_supplier = True
+        user.is_confirmed = True
         user.save(using=self._db)
         return user
 
@@ -23,6 +24,7 @@ class UserManager(BaseUserManager):
         user = self.create_user(email, password=password)
         user.is_superuser = True
         user.is_staff = True
+        user.is_confirmed = True
         user.save(using=self._db)
         return user
 
@@ -33,6 +35,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
     is_supplier = models.BooleanField(default=False)
+    is_confirmed = models.BooleanField(default=False)
     objects = UserManager()
     email = models.EmailField('email address', unique=True)
     first_name = models.CharField(max_length=50, verbose_name='Имя')
