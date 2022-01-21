@@ -37,8 +37,7 @@ class ShopImportSerializer(ShopSerializer):
             # Creating new categories from price list yaml file content
             for category in price_list.get('categories'):
                 new_category, _ = Category.objects.get_or_create(
-                    name=category.get('name'),
-
+                    name=category.get('name')
                 )
 
                 new_shop_category = ShopCategory(

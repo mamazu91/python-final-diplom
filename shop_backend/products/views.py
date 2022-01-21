@@ -10,7 +10,7 @@ class ProductViewSet(ModelViewSet):
     queryset = Product.objects.filter(shops__is_closed=False).distinct('name')
     serializer_class = ProductSerializer
     filter_backends = [DjangoFilterBackend]
-    filter_class = ProductShopCategoryFilter
+    filterset_class = ProductShopCategoryFilter
     http_method_names = ['get']
 
     def retrieve(self, request, *args, **kwargs):

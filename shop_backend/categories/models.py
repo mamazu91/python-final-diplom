@@ -3,7 +3,7 @@ from shops.models import Shop
 
 
 class Category(models.Model):
-    shops = models.ManyToManyField(Shop, through='ShopCategory', related_name='categories', blank=True,
+    shops = models.ManyToManyField(Shop, through='ShopCategory', related_name='categories',
                                    verbose_name='Список магазинов')
     name = models.CharField(max_length=50, verbose_name='Название')
 
