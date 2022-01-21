@@ -1,7 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from .models import Shop
 from .serializers import ShopSerializer, ShopImportSerializer, ShopStateSerializer
-from orders.serializers import OrderSerializer
 from .permissions import IsAuthenticatedSupplier
 from rest_framework.response import Response
 

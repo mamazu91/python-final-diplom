@@ -36,9 +36,9 @@ client_router.register('orders', UserOrderViewSet, basename='client_orders')
 client_router.register('pwd', UserPasswordViewSet, basename='password_change')
 
 shop_router = DefaultRouter()
-shop_router.register('shops', OpenShopViewSet, basename='shop_shops')
-shop_router.register('products', ProductViewSet, basename='shop_products')
-shop_router.register('categories', CategoryViewSet, basename='shop_categories')
+shop_router.register('shops', OpenShopViewSet, basename='open_shops')
+shop_router.register('products', ProductViewSet, basename='products')
+shop_router.register('categories', CategoryViewSet, basename='categories')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
