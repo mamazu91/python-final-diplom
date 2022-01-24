@@ -14,8 +14,8 @@ class Category(models.Model):
 
 
 class ShopCategory(models.Model):
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, blank=True, verbose_name='Магазин')
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True, verbose_name='Категория')
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, verbose_name='Магазин')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
     internal_category_id = models.PositiveIntegerField(verbose_name='Внутренний идентификатор категории')
 
     class Meta:
