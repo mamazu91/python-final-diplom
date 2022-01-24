@@ -40,7 +40,7 @@ def test_products_list(api_client, product_factory):
 
 
 @pytest.mark.django_db
-def test_products_detail(api_client, product_factory):
+def test_product_detail(api_client, product_factory):
     product = product_factory(make_m2m=True)
     url = reverse('products-detail', args=(product.id,))
     response = api_client.get(url)
@@ -53,7 +53,7 @@ def test_products_detail(api_client, product_factory):
 
 
 @pytest.mark.django_db
-def test_products_filter_category(api_client, category_factory, product_factory):
+def test_products_list_filter_category(api_client, category_factory, product_factory):
     # Intention here is to create a few products all of which would be in the same category
     category = category_factory(make_m2m=True)
     products = product_factory(_quantity=2, category__id=category, make_m2m=True)
@@ -69,7 +69,7 @@ def test_products_filter_category(api_client, category_factory, product_factory)
 
 
 @pytest.mark.django_db
-def test_products_filter_category(api_client, shop_factory, product_factory):
+def test_products_list_filter_category(api_client, shop_factory, product_factory):
     # Intention here is to create a few products all of which would be in the same set of shops
     shops = shop_factory(_quantity=3)
     products = product_factory(_quantity=2, shops=shops, make_m2m=True)

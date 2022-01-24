@@ -32,7 +32,7 @@ class ShopImportSerializer(ShopSerializer):
                 }
             )
             if not is_new_shop_created:
-                raise ValidationError({'name': ['Shop with this name already exists.']})
+                raise ValidationError({'results': ['Shop with this name already exists.']})
 
             # Creating new categories from price list yaml file content
             for category in price_list.get('categories'):

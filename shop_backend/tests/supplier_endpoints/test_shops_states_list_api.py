@@ -15,7 +15,7 @@ def test_shops_states_list_by_anonymous(api_client, shop_factory):
 def test_shops_states_list_by_client(api_client, user_factory, shop_factory):
     # Intention here is to create a client with already confirmed email,
     # as I am not really interested in testing its confirmation
-    client = user_factory()
+    client = user_factory(is_confirmed=True)
     client_token = Token.objects.create(user=client)
 
     shop_factory(_quantity=2)
@@ -27,7 +27,7 @@ def test_shops_states_list_by_client(api_client, user_factory, shop_factory):
 
 @pytest.mark.django_db
 def test_shops_states_list_by_supplier(api_client, user_factory, shop_factory):
-    supplier = user_factory()
+    supplier = user_factory(is_supplier=True, is_confirmed=True)
     supplier_token = Token.objects.create(user=supplier)
     supplier_shops = shop_factory(_quantity=2, user=supplier)
 
