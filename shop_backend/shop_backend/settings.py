@@ -131,8 +131,8 @@ AUTH_USER_MODEL = 'contacts.User'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.mail.yahoo.com'
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'basketman91@yahoo.com'
+EMAIL_HOST_PASSWORD = 'ampxokwsijrwqvqb'
 EMAIL_PORT = '465'
 EMAIL_USE_SSL = True
 SERVER_EMAIL = EMAIL_HOST_USER

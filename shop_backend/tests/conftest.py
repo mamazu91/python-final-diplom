@@ -4,7 +4,7 @@ from model_bakery import baker
 
 
 @pytest.fixture()
-def client():
+def api_client():
     return APIClient()
 
 
@@ -28,5 +28,13 @@ def category_factory():
 def product_factory():
     def factory(**kwargs):
         return baker.make('products.Product', **kwargs)
+
+    return factory
+
+
+@pytest.fixture()
+def user_factory():
+    def factory(**kwargs):
+        return baker.make('contacts.User', **kwargs)
 
     return factory
