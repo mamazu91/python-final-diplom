@@ -26,12 +26,12 @@ from django.urls import path, include
 partner_router = DefaultRouter()
 partner_router.register('import', ShopImportViewSet, basename='shop_import')
 partner_router.register('states', ShopStateViewSet, basename='shops_states')
-partner_router.register('orders', UserOrderViewSet, basename='partner_shop_orders')
+partner_router.register('orders', UserOrderViewSet, basename='shop_orders')
 
 client_router = DefaultRouter()
 client_router.register('reg', UserRegisterViewSet, basename='client_register')
 client_router.register('confirm', UserConfirmViewSet, basename='client_confirm')
-client_router.register('basket', BasketViewSet, basename='client_basket')
+client_router.register('basket', BasketViewSet, basename='basket')
 client_router.register('orders', UserOrderViewSet, basename='client_orders')
 client_router.register('pwd', UserPasswordViewSet, basename='password_change')
 

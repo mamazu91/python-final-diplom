@@ -15,10 +15,8 @@ class Product(models.Model):
 
 
 class ProductInfo(models.Model):
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='products', blank=True,
-                             verbose_name='Магазин')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='infos', blank=True,
-                                verbose_name='Продукт')
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='products', verbose_name='Магазин')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='infos', verbose_name='Продукт')
     internal_product_id = models.PositiveIntegerField(verbose_name='Внутренний идентификатор категории')
     quantity = models.PositiveIntegerField(verbose_name='Количество')
     price = models.PositiveIntegerField(verbose_name='Цена')

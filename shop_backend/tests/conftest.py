@@ -38,3 +38,27 @@ def user_factory():
         return baker.make('contacts.User', **kwargs)
 
     return factory
+
+
+@pytest.fixture()
+def order_content_factory():
+    def factory(**kwargs):
+        return baker.make('orders.OrderContent', **kwargs)
+
+    return factory
+
+
+@pytest.fixture()
+def order_positions_factory():
+    def factory(**kwargs):
+        return baker.make('products.ProductInfo', **kwargs)
+
+    return factory
+
+
+@pytest.fixture()
+def order_factory():
+    def factory(**kwargs):
+        return baker.make('orders.Order', **kwargs)
+
+    return factory

@@ -43,7 +43,7 @@ def test_shop_import_by_supplier_non_existing_file(api_client, user_factory):
     supplier_token = Token.objects.create(user=supplier)
 
     # Intent here is to pass a string with random numbers and characters to avoid situations when the test would become
-    # successful should someone decide to create a file with name that would have been predefined here.
+    # successful should someone decide to create a file with name that would have been predefined here
     payload = {'filename': ''.join(random.choices(string.ascii_uppercase + string.digits, k=10))}
     url = reverse('shop_import-list')
     api_client.credentials(HTTP_AUTHORIZATION=f'Token {supplier_token.key}')

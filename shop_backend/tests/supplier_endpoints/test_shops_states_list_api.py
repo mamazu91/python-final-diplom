@@ -43,5 +43,5 @@ def test_shops_states_list_by_supplier(api_client, user_factory, shop_factory):
     # Intention here is to check that all the shops will have is_closed field,
     # because basically returning this field for the shops is kind of the main thing of this API.
     # Also had to create this sort of hack with sum() because 'is_closed' is bool,
-    # meaning that all() would evaluate list of 'is_closed' differently depending on their values.
+    # meaning that all() would evaluate list of 'is_closed' differently depending on their values
     assert sum([1 for shop in response.data if shop.get('is_closed') is False]) == len(supplier_shops)

@@ -124,7 +124,15 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication'
     ],
-    'DATETIME_FORMAT': "%m.%d.%Y %H:%M:%S"
+    'DATETIME_FORMAT': "%m.%d.%Y %H:%M:%S",
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '1/second',
+        'user': '1/second'
+    }
 }
 
 AUTH_USER_MODEL = 'contacts.User'
@@ -132,7 +140,7 @@ AUTH_USER_MODEL = 'contacts.User'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.mail.yahoo.com'
 EMAIL_HOST_USER = 'basketman91@yahoo.com'
-EMAIL_HOST_PASSWORD = 'ampxokwsijrwqvqb'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = '465'
 EMAIL_USE_SSL = True
 SERVER_EMAIL = EMAIL_HOST_USER
