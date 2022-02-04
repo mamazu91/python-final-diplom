@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'categories',
     'products',
     'contacts',
-    'orders'
+    'orders',
+    'drf_spectacular'
 ]
 
 MIDDLEWARE = [
@@ -130,9 +131,10 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle'
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '1/second',
-        'user': '1/second'
-    }
+        'anon': '3/second',
+        'user': '5/second'
+    },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
 }
 
 AUTH_USER_MODEL = 'contacts.User'
@@ -144,3 +146,9 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = '465'
 EMAIL_USE_SSL = True
 SERVER_EMAIL = EMAIL_HOST_USER
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Shop backend',
+    'DESCRIPTION': 'Netology diploma by mamazu',
+    'VERSION': '1.0.0',
+}

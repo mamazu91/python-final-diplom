@@ -22,6 +22,7 @@ from categories.views import CategoryViewSet
 from django.contrib import admin
 from rest_framework.authtoken import views
 from django.urls import path, include
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 partner_router = DefaultRouter()
 partner_router.register('import', ShopImportViewSet, basename='shop_import')
@@ -46,4 +47,11 @@ urlpatterns = [
     path('api/v1/', include(client_router.urls)),
     path('api/v1/', include(shop_router.urls)),
     path('api/v1/partner/', include(partner_router.urls)),
+
+    # This route basically provides the schema.
+    path('api/v1/schema/', SpectacularAPIView.as_view(), name='schema'),
+
+    # And this route creates a UI out of the schema above.
+    path('api/v1/schema/swagger-ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui')
+
 ]

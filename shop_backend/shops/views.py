@@ -3,6 +3,7 @@ from .models import Shop
 from .serializers import ShopSerializer, ShopImportSerializer, ShopStateSerializer
 from .permissions import IsAuthenticatedSupplier
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema_view, extend_schema
 
 
 class ShopViewSet(ModelViewSet):
@@ -35,6 +36,10 @@ class ShopStateViewSet(ModelViewSet):
         return Response(serializer.data)
 
 
+@extend_schema_view(
+    retrieve=extend_schema(description='loopa'),
+    list=extend_schema(description='poopa')
+)
 class OpenShopViewSet(ModelViewSet):
     queryset = Shop.objects.filter(is_closed=False)
     serializer_class = ShopSerializer

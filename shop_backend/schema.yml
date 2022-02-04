@@ -1,0 +1,892 @@
+openapi: 3.0.3
+info:
+  title: Shop backend
+  version: 1.0.0
+  description: Netology diploma by mamazu
+paths:
+  /api/v1/auth/:
+    post:
+      operationId: auth_create
+      tags:
+      - auth
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+          description: ''
+  /api/v1/basket/:
+    get:
+      operationId: basket_list
+      tags:
+      - basket
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Basket'
+          description: ''
+  /api/v1/basket/{id}/:
+    get:
+      operationId: basket_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - basket
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Basket'
+          description: ''
+    put:
+      operationId: basket_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - basket
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Basket'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Basket'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Basket'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Basket'
+          description: ''
+    patch:
+      operationId: basket_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - basket
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedBasket'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedBasket'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedBasket'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Basket'
+          description: ''
+  /api/v1/categories/:
+    get:
+      operationId: categories_list
+      tags:
+      - categories
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+          description: ''
+  /api/v1/categories/{id}/:
+    get:
+      operationId: categories_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Категория.
+        required: true
+      tags:
+      - categories
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+          description: ''
+  /api/v1/confirm/:
+    post:
+      operationId: confirm_create
+      tags:
+      - confirm
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserConfirm'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserConfirm'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserConfirm'
+        required: true
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserConfirm'
+          description: ''
+  /api/v1/orders/:
+    get:
+      operationId: orders_list
+      tags:
+      - orders
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserOrder'
+          description: ''
+    post:
+      operationId: orders_create
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserOrder'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserOrder'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserOrder'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOrder'
+          description: ''
+  /api/v1/orders/{id}/:
+    get:
+      operationId: orders_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - orders
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOrder'
+          description: ''
+    patch:
+      operationId: orders_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserOrder'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserOrder'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserOrder'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOrder'
+          description: ''
+  /api/v1/partner/import/:
+    post:
+      operationId: partner_import_create
+      tags:
+      - partner
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShopImport'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ShopImport'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ShopImport'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShopImport'
+          description: ''
+  /api/v1/partner/orders/:
+    get:
+      operationId: partner_orders_list
+      tags:
+      - partner
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserOrder'
+          description: ''
+    post:
+      operationId: partner_orders_create
+      tags:
+      - partner
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserOrder'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserOrder'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserOrder'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOrder'
+          description: ''
+  /api/v1/partner/orders/{id}/:
+    get:
+      operationId: partner_orders_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - partner
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOrder'
+          description: ''
+    patch:
+      operationId: partner_orders_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - partner
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserOrder'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserOrder'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserOrder'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserOrder'
+          description: ''
+  /api/v1/partner/states/:
+    get:
+      operationId: partner_states_list
+      tags:
+      - partner
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShopState'
+          description: ''
+  /api/v1/partner/states/{id}/:
+    get:
+      operationId: partner_states_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - partner
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShopState'
+          description: ''
+    put:
+      operationId: partner_states_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      tags:
+      - partner
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShopState'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ShopState'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ShopState'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShopState'
+          description: ''
+  /api/v1/products/:
+    get:
+      operationId: products_list
+      parameters:
+      - in: query
+        name: category
+        schema:
+          type: integer
+      - in: query
+        name: shop
+        schema:
+          type: array
+          items:
+            type: integer
+        explode: true
+        style: form
+      tags:
+      - products
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+          description: ''
+  /api/v1/products/{id}/:
+    get:
+      operationId: products_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Продукт.
+        required: true
+      tags:
+      - products
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+          description: ''
+  /api/v1/pwd/{id}/:
+    patch:
+      operationId: pwd_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Пользователь.
+        required: true
+      tags:
+      - pwd
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserPassword'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserPassword'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserPassword'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPassword'
+          description: ''
+  /api/v1/reg/:
+    post:
+      operationId: reg_create
+      tags:
+      - reg
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRegister'
+        required: true
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserRegister'
+          description: ''
+  /api/v1/shops/:
+    get:
+      operationId: shops_list
+      tags:
+      - shops
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Shop'
+          description: ''
+  /api/v1/shops/{id}/:
+    get:
+      operationId: shops_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this Магазин.
+        required: true
+      tags:
+      - shops
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shop'
+          description: ''
+components:
+  schemas:
+    AuthToken:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        token:
+          type: string
+          readOnly: true
+      required:
+      - password
+      - token
+      - username
+    Basket:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        total:
+          type: string
+          readOnly: true
+        positions:
+          type: array
+          items:
+            $ref: '#/components/schemas/BasketPosition'
+      required:
+      - id
+      - positions
+      - total
+    BasketPosition:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+          readOnly: true
+        price:
+          type: string
+          readOnly: true
+        quantity:
+          type: integer
+          maximum: 2147483647
+          minimum: 0
+          title: Количество
+        status:
+          allOf:
+          - $ref: '#/components/schemas/BasketPositionStatusEnum'
+          title: Состояние
+      required:
+      - id
+      - name
+      - price
+      - quantity
+    BasketPositionStatusEnum:
+      enum:
+      - new
+      - shipped
+      - delivered
+      type: string
+    Category:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 50
+      required:
+      - id
+      - name
+    PatchedBasket:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        total:
+          type: string
+          readOnly: true
+        positions:
+          type: array
+          items:
+            $ref: '#/components/schemas/BasketPosition'
+    PatchedUserOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        total:
+          type: string
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/UserOrderStatusEnum'
+          title: Состояние
+        positions:
+          type: array
+          items:
+            $ref: '#/components/schemas/BasketPosition'
+          readOnly: true
+        delivery_address:
+          type: string
+    PatchedUserPassword:
+      type: object
+      properties:
+        password:
+          type: string
+          writeOnly: true
+    Product:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          title: Название
+          maxLength: 100
+      required:
+      - id
+      - name
+    Shop:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+          title: Название
+      required:
+      - id
+      - name
+    ShopImport:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+          title: Название
+        filename:
+          type: string
+          maxLength: 255
+      required:
+      - filename
+      - id
+      - name
+    ShopState:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+          title: Название
+        is_closed:
+          type: boolean
+      required:
+      - id
+      - is_closed
+      - name
+    UserConfirm:
+      type: object
+      properties:
+        token:
+          type: string
+      required:
+      - token
+    UserOrder:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        total:
+          type: string
+          readOnly: true
+        status:
+          allOf:
+          - $ref: '#/components/schemas/UserOrderStatusEnum'
+          title: Состояние
+        positions:
+          type: array
+          items:
+            $ref: '#/components/schemas/BasketPosition'
+          readOnly: true
+        delivery_address:
+          type: string
+      required:
+      - delivery_address
+      - id
+      - positions
+      - total
+    UserOrderStatusEnum:
+      enum:
+      - new
+      - in_delivery
+      - completed
+      type: string
+    UserPassword:
+      type: object
+      properties:
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - password
+    UserRegister:
+      type: object
+      properties:
+        first_name:
+          type: string
+          title: Имя
+          maxLength: 50
+        middle_name:
+          type: string
+          title: Отчество
+          maxLength: 50
+        last_name:
+          type: string
+          title: Фамилия
+          maxLength: 50
+        email:
+          type: string
+          format: email
+          title: Email address
+          maxLength: 254
+        password:
+          type: string
+          writeOnly: true
+        password_repeat:
+          type: string
+          writeOnly: true
+        company:
+          type: string
+          title: Компания
+          maxLength: 50
+        position:
+          type: string
+          title: Позиция
+          maxLength: 50
+      required:
+      - company
+      - email
+      - first_name
+      - last_name
+      - middle_name
+      - password
+      - password_repeat
+      - position
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
