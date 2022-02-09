@@ -19,7 +19,7 @@ class Order(models.Model):
 
     class Meta:
         verbose_name = 'Заказ'
-        verbose_name_plural = "Список заказов"
+        verbose_name_plural = 'Список заказов'
         ordering = ['-created_at']
 
 

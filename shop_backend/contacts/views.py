@@ -1,6 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from contacts.models import User
 from .serializers import UserRegisterSerializer, UserConfirmSerializer, UserPasswordSerializer
+from drf_spectacular.utils import extend_schema, OpenApiResponse
 from rest_framework.authtoken.models import Token
 from contacts.permissions import IsAuthenticatedClient
 from shops.permissions import IsAuthenticatedSupplier
@@ -12,7 +13,15 @@ class UserRegisterViewSet(ModelViewSet):
     http_method_names = ['post']
 
 
+@extend_schema(description="Confirm client's email.", request={'application/json': UserConfirmSerializer}, responses={
+    200: OpenApiResponse(response=UserConfirmSerializer),
+    400: OpenApiResponse(description='Bad Request')
+}
+               )
 class UserConfirmViewSet(ModelViewSet):
+    """
+    ModelViewSet for confirming client's emails.
+    """
     serializer_class = UserConfirmSerializer
     http_method_names = ['post']
 

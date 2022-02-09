@@ -150,5 +150,5 @@ SERVER_EMAIL = EMAIL_HOST_USER
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Shop backend',
     'DESCRIPTION': 'Netology diploma by mamazu',
-    'VERSION': '1.0.0',
+    'VERSION': '1.0.0'
 }

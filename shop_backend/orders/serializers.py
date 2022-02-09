@@ -26,6 +26,9 @@ class BasketPositionSerializer(serializers.ModelSerializer):
 
 
 class BasketSerializer(serializers.ModelSerializer):
+    """
+    Serializer for clients baskets.
+    """
     positions = BasketPositionSerializer(many=True, source='contents')
     total = serializers.SerializerMethodField('get_total')
 

@@ -8,8 +8,8 @@ class Category(models.Model):
     name = models.CharField(max_length=50, verbose_name='Название')
 
     class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Список категорий'
+        verbose_name = 'category'
+        verbose_name_plural = 'categories list'
         ordering = ['-name']
 
 

@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from .models import Shop
-from .serializers import ShopSerializer, ShopImportSerializer, ShopStateSerializer
+from .serializers import BaseShopSerializer, ShopImportSerializer, ShopStateSerializer
 from .permissions import IsAuthenticatedSupplier
 from rest_framework.response import Response
 from drf_spectacular.utils import extend_schema_view, extend_schema
@@ -8,7 +8,7 @@ from drf_spectacular.utils import extend_schema_view, extend_schema
 
 class ShopViewSet(ModelViewSet):
     queryset = Shop.objects.all()
-    serializer_class = ShopSerializer
+    serializer_class = BaseShopSerializer
     http_method_names = ['get']
 
 
@@ -37,10 +37,13 @@ class ShopStateViewSet(ModelViewSet):
 
 
 @extend_schema_view(
-    retrieve=extend_schema(description='loopa'),
-    list=extend_schema(description='poopa')
+    retrieve=extend_schema(description='Get open shop.'),
+    list=extend_schema(description='Get list of open shops.')
 )
 class OpenShopViewSet(ModelViewSet):
+    """
+    ModelViewSet for retrieving and listing open shops.
+    """
     queryset = Shop.objects.filter(is_closed=False)
-    serializer_class = ShopSerializer
+    serializer_class = BaseShopSerializer
     http_method_names = ['get']

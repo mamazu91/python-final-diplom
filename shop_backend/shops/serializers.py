@@ -8,9 +8,9 @@ from django.db import transaction
 from orders.serializers import BasketSerializer
 
 
-class ShopSerializer(serializers.ModelSerializer):
+class BaseShopSerializer(serializers.ModelSerializer):
     """
-    General shop serializer that exposes only those fields that every shop must have.
+    Base shop serializer that exposes only those fields that every shop must have.
     To add some other fields, inherit from this serializer.
     """
     class Meta:
@@ -19,9 +19,9 @@ class ShopSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'name']
 
 
-class ShopImportSerializer(ShopSerializer):
-    class Meta(ShopSerializer.Meta):
-        fields = ShopSerializer.Meta.fields + ['filename']
+class ShopImportSerializer(BaseShopSerializer):
+    class Meta(BaseShopSerializer.Meta):
+        fields = BaseShopSerializer.Meta.fields + ['filename']
 
     def create(self, validated_data):
         price_list = price_list_to_yaml(validated_data.get('filename'))
@@ -86,15 +86,15 @@ class ShopImportSerializer(ShopSerializer):
             return new_shop
 
 
-class ShopStateSerializer(ShopSerializer):
+class ShopStateSerializer(BaseShopSerializer):
     is_closed = serializers.BooleanField(required=True)
 
-    class Meta(ShopSerializer.Meta):
-        fields = ShopSerializer.Meta.fields + ['is_closed']
+    class Meta(BaseShopSerializer.Meta):
+        fields = BaseShopSerializer.Meta.fields + ['is_closed']
 
 
-class ShopOrderSerializer(ShopSerializer):
+class ShopOrderSerializer(BaseShopSerializer):
     orders = BasketSerializer(many=True, allow_null=True)
 
-    class Meta(ShopSerializer.Meta):
-        fields = ShopSerializer.Meta.fields + ['orders']
+    class Meta(BaseShopSerializer.Meta):
+        fields = BaseShopSerializer.Meta.fields + ['orders']

@@ -64,6 +64,9 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 
 class UserConfirmSerializer(serializers.ModelSerializer):
+    """
+    Serializer for confirming client's emails.
+    """
     token = serializers.CharField(source='key')
 
     class Meta:
