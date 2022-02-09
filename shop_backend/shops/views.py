@@ -37,8 +37,12 @@ class ShopStateViewSet(ModelViewSet):
 
 
 @extend_schema_view(
-    retrieve=extend_schema(description='Get open shop.'),
-    list=extend_schema(description='Get list of open shops.')
+    retrieve=extend_schema(summary='Get open shop',
+                           description='Get specific open shop by providing its unique id. '
+                                       'Shops with field is_closed equal to True are not going to be displayed.'),
+    list=extend_schema(summary='Get list of open shops',
+                       description='Get list of open shops. '
+                                   'Shops with field is_closed equal to True are not going to be displayed.')
 )
 class OpenShopViewSet(ModelViewSet):
     """

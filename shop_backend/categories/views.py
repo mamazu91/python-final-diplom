@@ -5,8 +5,10 @@ from .serializers import CategorySerializer
 
 
 @extend_schema_view(
-    retrieve=extend_schema(description='Get product category.'),
-    list=extend_schema(description='Get list of products categories.')
+    retrieve=extend_schema(summary='Get product category',
+                           description='Get specific product category by providing its unique id.'),
+    list=extend_schema(summary='Get list of products categories',
+                       description='Get list of products categories.')
 )
 class CategoryViewSet(ModelViewSet):
     """

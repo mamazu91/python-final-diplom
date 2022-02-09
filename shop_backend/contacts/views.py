@@ -13,10 +13,14 @@ class UserRegisterViewSet(ModelViewSet):
     http_method_names = ['post']
 
 
-@extend_schema(description="Confirm client's email.", request={'application/json': UserConfirmSerializer}, responses={
-    200: OpenApiResponse(response=UserConfirmSerializer),
-    400: OpenApiResponse(description='Bad Request')
-}
+@extend_schema(summary="Confirm client's email",
+               description="Confirm client's email by specifying the token "
+                           "that was sent to the client's email upon registration.",
+               request={'application/json': UserConfirmSerializer},
+               responses={
+                   201: OpenApiResponse(response=UserConfirmSerializer),
+                   400: OpenApiResponse(description='Bad Request')
+               }
                )
 class UserConfirmViewSet(ModelViewSet):
     """

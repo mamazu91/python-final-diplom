@@ -4,7 +4,7 @@ from shops.models import Shop
 
 
 class ProductShopCategoryFilter(filters.FilterSet):
-    shop = filters.ModelMultipleChoiceFilter(field_name='shops', queryset=Shop.objects.all())
+    shop = filters.ModelChoiceFilter(field_name='shops', queryset=Shop.objects.all())
 
     class Meta:
         model = Product

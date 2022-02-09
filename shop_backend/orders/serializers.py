@@ -75,6 +75,7 @@ class UserOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'total', 'status', 'positions', 'delivery_address']
+        read_only_fields = ['id', 'total', 'status', 'positions']
 
     @staticmethod
     def get_total(obj):

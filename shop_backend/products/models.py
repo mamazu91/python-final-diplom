@@ -9,8 +9,8 @@ class Product(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название')
 
     class Meta:
-        verbose_name = 'Продукт'
-        verbose_name_plural = 'Список продуктов'
+        verbose_name = 'product'
+        verbose_name_plural = 'products list'
         ordering = ['name']
 
 
