@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -131,10 +130,14 @@ REST_FRAMEWORK = {
         'rest_framework.throttling.UserRateThrottle'
     ],
     'DEFAULT_THROTTLE_RATES': {
-        'anon': '3/second',
-        'user': '5/second'
+        'anon': '5/second',
+        'user': '8/second'
     },
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
+}
+
+SPECTACULAR_DEFAULTS = {
+    "PREPROCESSING_HOOKS": ["shop_backend.openapi.custom_preprocessing_hook"],
 }
 
 AUTH_USER_MODEL = 'contacts.User'

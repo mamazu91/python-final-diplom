@@ -45,8 +45,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     position = models.CharField(max_length=50, verbose_name='Позиция')
 
     class Meta:
-        verbose_name = 'Пользователь'
-        verbose_name_plural = "Список пользователей"
+        verbose_name = 'user'
+        verbose_name_plural = 'users list'
         ordering = ['email']
 
 
@@ -61,5 +61,5 @@ class Contact(models.Model):
     phone = models.CharField(max_length=20, verbose_name='Телефон')
 
     class Meta:
-        verbose_name = 'Контакты пользователя'
-        verbose_name_plural = "Список контактов пользователей"
+        verbose_name = 'user contacts'
+        verbose_name_plural = 'users contacts list'

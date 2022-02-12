@@ -23,8 +23,8 @@ class ProductInfo(models.Model):
     price_rrc = models.PositiveIntegerField(verbose_name='Рекомендуемая розничная цена')
 
     class Meta:
-        verbose_name = 'Информация о продукте'
-        verbose_name_plural = 'Список информации о продуктах'
+        verbose_name = 'product info'
+        verbose_name_plural = 'products infos list'
         constraints = [models.UniqueConstraint(fields=['shop', 'product'], name='unique_product_info')]
 
 
@@ -33,8 +33,8 @@ class Parameter(models.Model):
     products = models.ManyToManyField(Product, through='ParameterValue', blank=True, verbose_name='Список продуктов')
 
     class Meta:
-        verbose_name = 'Параметра'
-        verbose_name_plural = 'Список параметров'
+        verbose_name = 'parameter'
+        verbose_name_plural = 'parameters list'
         ordering = ['-name']
 
 
@@ -46,6 +46,6 @@ class ParameterValue(models.Model):
     value = models.CharField(max_length=50, verbose_name='Значение')
 
     class Meta:
-        verbose_name = 'Продукт и параметр'
-        verbose_name_plural = 'Список продуктов и параметров'
+        verbose_name = 'product parameter'
+        verbose_name_plural = 'products parameters list'
         constraints = [models.UniqueConstraint(fields=['product', 'parameter'], name='unique_product_parameter')]

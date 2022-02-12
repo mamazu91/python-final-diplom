@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiParameter, OpenApiTypes, OpenApiResponse
+from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiResponse
 from rest_framework.viewsets import ModelViewSet
 from .serializers import BasketSerializer, UserOrderSerializer
 from .permissions import IsAuthenticatedClient

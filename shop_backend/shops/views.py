@@ -1,25 +1,56 @@
+from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiResponse
 from rest_framework.viewsets import ModelViewSet
 from .models import Shop
 from .serializers import BaseShopSerializer, ShopImportSerializer, ShopStateSerializer
 from .permissions import IsAuthenticatedSupplier
 from rest_framework.response import Response
-from drf_spectacular.utils import extend_schema_view, extend_schema
 
 
-class ShopViewSet(ModelViewSet):
-    queryset = Shop.objects.all()
-    serializer_class = BaseShopSerializer
-    http_method_names = ['get']
-
-
+@extend_schema(
+    summary="Import shop-related data from yaml file",
+    description="Imports shop-related data from yaml file. "
+                "File must at least contain information on shop, its categories, and their goods.",
+    request={'application/json': ShopImportSerializer},
+    responses={
+        201: OpenApiResponse(response=ShopImportSerializer),
+        400: OpenApiResponse(description='Bad Request'),
+        401: OpenApiResponse(description='Unauthorized'),
+        403: OpenApiResponse(description='Forbidden')
+    }
+)
 class ShopImportViewSet(ModelViewSet):
+    """
+    ModelViewSet for importing shops-related data from yaml files.
+    """
     queryset = Shop.objects.all()
     serializer_class = ShopImportSerializer
     permission_classes = [IsAuthenticatedSupplier]
     http_method_names = ['post']
 
 
+@extend_schema_view(
+    retrieve=extend_schema(
+        summary='Get shop state',
+        description='Get state of specific shop by providing its unique id.'),
+    list=extend_schema(
+        summary='Get list of shops states',
+        description='Get list of shops states.'),
+    update=extend_schema(
+        summary='Change shop state',
+        description='Change state of the specified shop.',
+        request={'application/json': ShopStateSerializer},
+        responses={
+            200: OpenApiResponse(response=ShopStateSerializer),
+            400: OpenApiResponse(description='Bad Request'),
+            401: OpenApiResponse(description='Unauthorized'),
+            403: OpenApiResponse(description='Forbidden')
+        }
+    ),
+)
 class ShopStateViewSet(ModelViewSet):
+    """
+    ModelViewSet for retrieving, listing and modifying shops states (from closed to open, or vice versa).
+    """
     serializer_class = ShopStateSerializer
     permission_classes = [IsAuthenticatedSupplier]
     http_method_names = ['get', 'put']

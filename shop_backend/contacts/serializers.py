@@ -10,6 +10,9 @@ from django.shortcuts import get_object_or_404
 
 
 class UserRegisterSerializer(serializers.ModelSerializer):
+    """
+    Serializer for registering clients.
+    """
     password = serializers.CharField(write_only=True)
     password_repeat = serializers.CharField(write_only=True)
 
@@ -88,7 +91,10 @@ class UserConfirmSerializer(serializers.ModelSerializer):
 
 
 class UserPasswordSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True)
+    """
+    Serializer for changing client's or supplier's passwords.
+    """
+    password = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User

@@ -18,8 +18,8 @@ class Order(models.Model):
                                         null=True)
 
     class Meta:
-        verbose_name = 'Заказ'
-        verbose_name_plural = 'Список заказов'
+        verbose_name = 'order'
+        verbose_name_plural = 'orders list'
         ordering = ['-created_at']
 
 
@@ -36,8 +36,8 @@ class OrderContent(models.Model):
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='new', verbose_name='Состояние')
 
     class Meta:
-        verbose_name = 'Содержимое заказа'
-        verbose_name_plural = 'Содержимое заказа'
+        verbose_name = 'order content'
+        verbose_name_plural = 'orders contents list'
         constraints = [
             models.UniqueConstraint(fields=['product_info', 'order'], name='unique_order_item'),
         ]

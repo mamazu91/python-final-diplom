@@ -20,6 +20,9 @@ class BaseShopSerializer(serializers.ModelSerializer):
 
 
 class ShopImportSerializer(BaseShopSerializer):
+    """
+    Serializer for importing shops-related data from yaml files.
+    """
     class Meta(BaseShopSerializer.Meta):
         fields = BaseShopSerializer.Meta.fields + ['filename']
 
@@ -87,6 +90,9 @@ class ShopImportSerializer(BaseShopSerializer):
 
 
 class ShopStateSerializer(BaseShopSerializer):
+    """
+    Serializer for retrieving, listing and modifying shops states (from closed to open, or vice versa).
+    """
     is_closed = serializers.BooleanField(required=True)
 
     class Meta(BaseShopSerializer.Meta):

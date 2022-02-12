@@ -19,6 +19,6 @@ class ShopCategory(models.Model):
     internal_category_id = models.PositiveIntegerField(verbose_name='Внутренний идентификатор категории')
 
     class Meta:
-        verbose_name = 'Магазин и категория'
-        verbose_name_plural = 'Список магазинов и категорий'
+        verbose_name = 'shop category'
+        verbose_name_plural = 'shops categories list'
         constraints = [models.UniqueConstraint(fields=['shop', 'category'], name='unique_shop_category')]

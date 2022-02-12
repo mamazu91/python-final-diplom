@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 
 @extend_schema_view(
-    retrieve=extend_schema(summary="Get product plus its details per shop it's available in",
+    retrieve=extend_schema(summary="Get product plus its details (per shop it's available in)",
                            description="Get specific product by providing its unique id. "
                                        "Also returns list of all necessary details for the product "
                                        "per shop it's available in.",
