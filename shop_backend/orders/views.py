@@ -12,23 +12,29 @@ from rest_framework.response import Response
 @extend_schema_view(
     list=extend_schema(
         summary="Get basket content",
-        description="Get basket content of the currently authenticated client."),
+        description='Get list of products positions in your basket, including their total.',
+    ),
     retrieve=extend_schema(exclude=True),
-    update=extend_schema(summary="Add products positions to basket",
-                         description="Add products positions to specific basket "
-                                     "by providing id uniquely identifying the basket. "
-                                     "Specifying more positions than there is in stock is going to cause an error. "
-                                     "Product position is relation between specific shop and one of its product, "
-                                     "which can be obtained via GET method on api/v1/products/ endpoint."),
-    partial_update=extend_schema(summary="Empty basket",
-                                 description='Empty basket of specific client '
-                                             'by providing id uniquely identifying the client.')
+    update=extend_schema(
+        summary="Add products positions to basket",
+        description="Add products positions to basket "
+                    "by providing id uniquely identifying your basket. "
+                    "Specifying more positions than there is in stock is going to cause an error. "
+                    "Product position is relation between specific shop and one of its product, "
+                    "which can be obtained via endpoint api/v1/products/",
+    ),
+    partial_update=extend_schema(
+        summary="Empty basket",
+        description='Empty basket of specific client '
+                    'by providing id uniquely identifying the client.',
+    )
 )
-@extend_schema(responses={
-    200: OpenApiResponse(response=BasketSerializer),
-    401: OpenApiResponse(description='Unauthorized'),
-    403: OpenApiResponse(description='Forbidden')
-}
+@extend_schema(
+    responses={
+        200: OpenApiResponse(response=BasketSerializer),
+        401: OpenApiResponse(description='Unauthorized'),
+        403: OpenApiResponse(description='Forbidden')
+    }
 )
 class BasketViewSet(ModelViewSet):
     """
@@ -62,8 +68,7 @@ class BasketViewSet(ModelViewSet):
 @extend_schema_view(
     list=extend_schema(
         summary='Get list of orders',
-        description='Returns list of both open and closed orders for the currently authenticated user, '
-                    'be it client or supplier.',
+        description='Get list of your both open and closed orders.',
         responses={
             200: OpenApiResponse(response=UserOrderSerializer),
             401: OpenApiResponse(description='Unauthorized'),
@@ -73,10 +78,9 @@ class BasketViewSet(ModelViewSet):
     retrieve=extend_schema(exclude=True),
     create=extend_schema(
         summary='Create a new order',
-        description='Creates new order for the currently authenticated client '
-                    'based on its basket content. Also creates order for each supplier products of '
-                    'which were detected in the client order. Then empties the client basket, and '
-                    'sends notification emails to both client and suppliers.',
+        description='Creates a new order based on your basket content. '
+                    'Also creates order for each supplier products of which were detected in your new order. '
+                    'Then empties basket, and sends notification emails to both you and all the suppliers.',
         request={'application/json': UserOrderSerializer},
         responses={
             201: OpenApiResponse(response=UserOrderSerializer),

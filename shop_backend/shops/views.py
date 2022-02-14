@@ -15,7 +15,7 @@ from rest_framework.response import Response
         400: OpenApiResponse(description='Bad Request'),
         401: OpenApiResponse(description='Unauthorized'),
         403: OpenApiResponse(description='Forbidden')
-    }
+    },
 )
 class ShopImportViewSet(ModelViewSet):
     """
@@ -32,21 +32,23 @@ class ShopImportViewSet(ModelViewSet):
     retrieve=extend_schema(
         summary='Get shop state',
         description='Get state of specific shop '
-                    'by providing id uniquely identifying the shop.'),
+                    'by providing id uniquely identifying the shop.',
+    ),
     list=extend_schema(
         summary='Get list of shops states',
-        description=' '),
+        description='Get list of states of all shops associated with your account.',
+    ),
     update=extend_schema(
         summary='Change shop state',
         description='Change state of specific shop '
-                    'by providing id uniquely identifying the shop..',
+                    'by providing id uniquely identifying the shop.',
         request={'application/json': ShopStateSerializer},
         responses={
             200: OpenApiResponse(response=ShopStateSerializer),
             400: OpenApiResponse(description='Bad Request'),
             401: OpenApiResponse(description='Unauthorized'),
             403: OpenApiResponse(description='Forbidden')
-        }
+        },
     ),
 )
 class ShopStateViewSet(ModelViewSet):
@@ -71,12 +73,17 @@ class ShopStateViewSet(ModelViewSet):
 
 
 @extend_schema_view(
-    retrieve=extend_schema(summary='Get open shop',
-                           description='Get specific open shop '
-                                       'by providing id uniquely identifying the shop. '
-                                       'Shops with field is_closed equal to True are not going to be displayed.'),
-    list=extend_schema(summary='Get list of open shops',
-                       description='Shops with field is_closed equal to True are not going to be displayed.')
+    retrieve=extend_schema(
+        summary='Get open shop',
+        description='Get specific open shop '
+                    'by providing id uniquely identifying the shop.',
+        tags=['common']
+    ),
+    list=extend_schema(
+        summary='Get list of open shops',
+        description='Get list of all existing and open shops.',
+        tags=['common']
+    )
 )
 class OpenShopViewSet(ModelViewSet):
     """

@@ -9,12 +9,11 @@ from shops.permissions import IsAuthenticatedSupplier
 
 @extend_schema(
     summary='Register',
-    description="Register a client and make it unconfirmed. "
+    description="Register a new unconfirmed account. "
                 "Email with confirmation token is going to be sent to the specified email address. "
-                "Client will remain unconfirmed until he confirms his email "
-                "by POSTing the confirmation token to /api/v1/confirm/ endpoint.",
-    request={
-        'application/json': UserRegisterSerializer},
+                "Account will remain unconfirmed until you confirm the specified email "
+                "by sending the confirmation token to /api/v1/confirm/ endpoint.",
+    request={'application/json': UserRegisterSerializer},
     responses={
         201: OpenApiResponse(response=UserRegisterSerializer),
         400: OpenApiResponse(description='Bad Request')
@@ -31,11 +30,10 @@ class UserRegisterViewSet(ModelViewSet):
 
 
 @extend_schema(
-    summary="Confirm email",
-    description="Confirm client's email by specifying the token "
-                "that was sent to the client's email upon registration.",
-    request={
-        'application/json': UserConfirmSerializer},
+    summary="Confirm email address",
+    description="Confirm email address by entering the token "
+                "that was sent to the email specified upon registration.",
+    request={'application/json': UserConfirmSerializer},
     responses={
         201: OpenApiResponse(response=UserConfirmSerializer),
         400: OpenApiResponse(description='Bad Request')
@@ -55,15 +53,14 @@ class UserConfirmViewSet(ModelViewSet):
 
 @extend_schema(
     summary="Change password",
-    description='Change password of specific client or supplier '
-                'by providing id uniquely identifying the client or supplier.',
+    description='Change password by providing id uniquely identifying your account.',
     request={'application/json': UserPasswordSerializer},
     responses={
         200: OpenApiResponse(response=UserPasswordSerializer),
         400: OpenApiResponse(description='Bad Request'),
         401: OpenApiResponse(description='Unauthorized'),
         403: OpenApiResponse(description='Forbidden')
-    }
+    },
 )
 class UserPasswordViewSet(ModelViewSet):
     """

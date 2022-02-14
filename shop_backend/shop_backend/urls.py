@@ -30,7 +30,6 @@ partner_router.register('states', ShopStateViewSet, basename='shops_states')
 partner_router.register('orders', UserOrderViewSet, basename='shop_orders')
 partner_router.register('pwd', UserPasswordViewSet, basename='password_change')
 
-
 client_router = DefaultRouter()
 client_router.register('reg', UserRegisterViewSet, basename='client_register')
 client_router.register('confirm', UserConfirmViewSet, basename='client_confirm')
@@ -45,7 +44,7 @@ shop_router.register('categories', CategoryViewSet, basename='categories')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/shop/', include(shop_router.urls)),
+    path('api/v1/', include(shop_router.urls)),
     path('api/v1/common/auth/', views.obtain_auth_token),
     path('api/v1/partner/', include(partner_router.urls)),
     path('api/v1/client/', include(client_router.urls)),
