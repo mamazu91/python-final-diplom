@@ -8,9 +8,11 @@ from shops.permissions import IsAuthenticatedSupplier
 
 
 @extend_schema(
-    summary='Register a client',
-    description="Register a client by providing the necessary information. "
-                "Confirmation email is going to be sent to the specified email.",
+    summary='Register',
+    description="Register a client and make it unconfirmed. "
+                "Email with confirmation token is going to be sent to the specified email address. "
+                "Client will remain unconfirmed until he confirms his email "
+                "by POSTing the confirmation token to /api/v1/confirm/ endpoint.",
     request={
         'application/json': UserRegisterSerializer},
     responses={
@@ -21,6 +23,7 @@ from shops.permissions import IsAuthenticatedSupplier
 class UserRegisterViewSet(ModelViewSet):
     """
     ModelViewSet for registering clients.
+    Endpoint: /api/v1/reg/
     """
     queryset = User.objects.all()
     serializer_class = UserRegisterSerializer
@@ -28,7 +31,7 @@ class UserRegisterViewSet(ModelViewSet):
 
 
 @extend_schema(
-    summary="Confirm client's email",
+    summary="Confirm email",
     description="Confirm client's email by specifying the token "
                 "that was sent to the client's email upon registration.",
     request={
@@ -40,7 +43,8 @@ class UserRegisterViewSet(ModelViewSet):
 )
 class UserConfirmViewSet(ModelViewSet):
     """
-    ModelViewSet for confirming client's emails.
+    ModelViewSet for confirming clients emails.
+    Endpoint: /api/v1/confirm/
     """
     serializer_class = UserConfirmSerializer
     http_method_names = ['post']
@@ -50,8 +54,9 @@ class UserConfirmViewSet(ModelViewSet):
 
 
 @extend_schema(
-    summary="Change client's or supplier's password",
-    description='Change password of the specified user.',
+    summary="Change password",
+    description='Change password of specific client or supplier '
+                'by providing id uniquely identifying the client or supplier.',
     request={'application/json': UserPasswordSerializer},
     responses={
         200: OpenApiResponse(response=UserPasswordSerializer),
@@ -62,7 +67,8 @@ class UserConfirmViewSet(ModelViewSet):
 )
 class UserPasswordViewSet(ModelViewSet):
     """
-    ModelViewSet for changing client's or supplier's passwords.
+    ModelViewSet for changing clients or suppliers passwords.
+    Endpoint: api/v1/pwd/
     """
     serializer_class = UserPasswordSerializer
     permission_classes = [IsAuthenticatedClient | IsAuthenticatedSupplier]

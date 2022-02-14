@@ -8,20 +8,22 @@ from rest_framework.response import Response
 
 
 @extend_schema_view(
-    retrieve=extend_schema(summary="Get product plus its details (per shop it's available in)",
-                           description="Get specific product by providing its unique id. "
-                                       "Also returns list of all necessary details for the product "
-                                       "per shop it's available in.",
+    retrieve=extend_schema(summary="Get product and details on its availability in shops",
+                           description="Get specific product "
+                                       "by providing id uniquely identifying the product. "
+                                       "Also returns list of all necessary details "
+                                       "about the product's availability in shops.",
                            responses={200: OpenApiResponse(response=ProductDetailsSerializer)}),
     list=extend_schema(summary='Get list of products in all shops',
-                       description='Simply returns list of all products from all open shops. '
-                                   'Products from shops with field is_closed equal to True'
-                                   ' are not going to be displayed. '
+                       description='Returns list of all products from all open shops. '
+                                   'Products from shops with field is_closed equal to True '
+                                   'are not going to be displayed. '
                                    'Can be filtered by category_id or/and shop_id.')
 )
 class ProductViewSet(ModelViewSet):
     """
     ModelViewSet for retrieving and listing products.
+    Endpoint: /api/v1/shop/products/
     """
     queryset = Product.objects.filter(shops__is_closed=False).distinct('name')
     serializer_class = ProductSerializer
@@ -31,7 +33,7 @@ class ProductViewSet(ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         """
-        Method for retrieving product plus its details per every shop it's available in.
+        Method for retrieving product and details on its availability in shops.
         """
         instance = super().get_object()
         serializer = ProductDetailsSerializer(instance)

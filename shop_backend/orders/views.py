@@ -11,17 +11,18 @@ from rest_framework.response import Response
 
 @extend_schema_view(
     list=extend_schema(
-        summary="Get content of the specified client's basket",
-        description="Get content of the specified client's basket."),
+        summary="Get basket content",
+        description="Get basket content of the currently authenticated client."),
     retrieve=extend_schema(exclude=True),
-    update=extend_schema(summary="Add products positions to the specified client's basket",
-                         description="Add products positions to the specified client's basket "
-                                     "by providing their unique ids as well as the desired quantity. "
+    update=extend_schema(summary="Add products positions to basket",
+                         description="Add products positions to specific basket "
+                                     "by providing id uniquely identifying the basket. "
                                      "Specifying more positions than there is in stock is going to cause an error. "
-                                     "Product position is basically relation between specific shop and its product. "
-                                     "Can be obtained via retrieve method on api/v1/products/ endpoint."),
-    partial_update=extend_schema(summary='Empty basket of the specified client',
-                                 description='Empty basket of the specified client.')
+                                     "Product position is relation between specific shop and one of its product, "
+                                     "which can be obtained via GET method on api/v1/products/ endpoint."),
+    partial_update=extend_schema(summary="Empty basket",
+                                 description='Empty basket of specific client '
+                                             'by providing id uniquely identifying the client.')
 )
 @extend_schema(responses={
     200: OpenApiResponse(response=BasketSerializer),
@@ -32,6 +33,7 @@ from rest_framework.response import Response
 class BasketViewSet(ModelViewSet):
     """
     ModelViewSet for retrieving, emptying and modifying clients baskets.
+    Endpoint: /api/v1/basket/
     """
     serializer_class = BasketSerializer
     permission_classes = [IsAuthenticatedClient]
@@ -86,7 +88,10 @@ class BasketViewSet(ModelViewSet):
 )
 class UserOrderViewSet(ModelViewSet):
     """
-    ModelViewSet for creating clients' orders, as well as listing orders of both clients' and suppliers'.
+    ModelViewSet for creating orders for clients, as well as listing orders of both clients and suppliers.
+    Endpoint:
+        Clients: /api/v1/orders/
+        Supplier: /api/v1/partner/orders/
     """
     serializer_class = UserOrderSerializer
     permission_classes = [IsAuthenticatedClient | IsAuthenticatedSupplier]

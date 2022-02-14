@@ -9,13 +9,10 @@ from django.core.mail import send_mail as send_new_order_mail
 from shop_backend import settings
 
 
-class OrderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Order
-        fields = ['id', 'created_at']
-
-
 class BasketPositionSerializer(serializers.ModelSerializer):
+    """
+    Serializer for products positions in clients baskets.
+    """
     id = serializers.IntegerField(source='product_info.id')
     name = serializers.SlugRelatedField(read_only=True, slug_field='name', source='product_info.product')
     price = serializers.SlugRelatedField(read_only=True, slug_field='price', source='product_info')
@@ -68,6 +65,9 @@ class BasketSerializer(serializers.ModelSerializer):
 
 
 class UserOrderSerializer(serializers.ModelSerializer):
+    """
+    Serializer for orders of both suppliers and clients.
+    """
     positions = BasketPositionSerializer(read_only=True, many=True, required=False, source='contents')
     total = serializers.SerializerMethodField('get_total', required=False)
     delivery_address = serializers.CharField(required=True)

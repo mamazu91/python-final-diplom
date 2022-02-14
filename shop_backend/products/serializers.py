@@ -14,7 +14,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ProductInfoSerializer(serializers.ModelSerializer):
     """
-    Serializer for product details.
+    Serializer for products details.
     """
     position_id = serializers.IntegerField(source='id')
     shop_id = serializers.SlugRelatedField(read_only=True, slug_field='id', source='shop')
@@ -30,7 +30,7 @@ class ProductInfoSerializer(serializers.ModelSerializer):
 
 class ProductDetailsSerializer(ProductSerializer):
     """
-    Serializer for product plus its details per every shop it's available in.
+    Serializer for products and details on its availability in shops.
     """
     available_in = ProductInfoSerializer(many=True, allow_null=True, source='infos')
 

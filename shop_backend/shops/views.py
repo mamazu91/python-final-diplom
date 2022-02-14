@@ -7,9 +7,8 @@ from rest_framework.response import Response
 
 
 @extend_schema(
-    summary="Import shop-related data from yaml file",
-    description="Imports shop-related data from yaml file. "
-                "File must at least contain information on shop, its categories, and their goods.",
+    summary="Import shop-related data from a yaml file",
+    description='File must at least contain information on shop, its categories, and their goods.',
     request={'application/json': ShopImportSerializer},
     responses={
         201: OpenApiResponse(response=ShopImportSerializer),
@@ -21,6 +20,7 @@ from rest_framework.response import Response
 class ShopImportViewSet(ModelViewSet):
     """
     ModelViewSet for importing shops-related data from yaml files.
+    Endpoint: /api/v1/partner/import/
     """
     queryset = Shop.objects.all()
     serializer_class = ShopImportSerializer
@@ -31,13 +31,15 @@ class ShopImportViewSet(ModelViewSet):
 @extend_schema_view(
     retrieve=extend_schema(
         summary='Get shop state',
-        description='Get state of specific shop by providing its unique id.'),
+        description='Get state of specific shop '
+                    'by providing id uniquely identifying the shop.'),
     list=extend_schema(
         summary='Get list of shops states',
-        description='Get list of shops states.'),
+        description=' '),
     update=extend_schema(
         summary='Change shop state',
-        description='Change state of the specified shop.',
+        description='Change state of specific shop '
+                    'by providing id uniquely identifying the shop..',
         request={'application/json': ShopStateSerializer},
         responses={
             200: OpenApiResponse(response=ShopStateSerializer),
@@ -50,6 +52,7 @@ class ShopImportViewSet(ModelViewSet):
 class ShopStateViewSet(ModelViewSet):
     """
     ModelViewSet for retrieving, listing and modifying shops states (from closed to open, or vice versa).
+    Endpoint: /api/v1/partner/states/
     """
     serializer_class = ShopStateSerializer
     permission_classes = [IsAuthenticatedSupplier]
@@ -69,15 +72,16 @@ class ShopStateViewSet(ModelViewSet):
 
 @extend_schema_view(
     retrieve=extend_schema(summary='Get open shop',
-                           description='Get specific open shop by providing its unique id. '
+                           description='Get specific open shop '
+                                       'by providing id uniquely identifying the shop. '
                                        'Shops with field is_closed equal to True are not going to be displayed.'),
     list=extend_schema(summary='Get list of open shops',
-                       description='Get list of open shops. '
-                                   'Shops with field is_closed equal to True are not going to be displayed.')
+                       description='Shops with field is_closed equal to True are not going to be displayed.')
 )
 class OpenShopViewSet(ModelViewSet):
     """
     ModelViewSet for retrieving and listing open shops.
+    Endpoint: /api/v1/shop/shops/
     """
     queryset = Shop.objects.filter(is_closed=False)
     serializer_class = BaseShopSerializer

@@ -68,7 +68,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
 class UserConfirmSerializer(serializers.ModelSerializer):
     """
-    Serializer for confirming client's emails.
+    Serializer for confirming clients emails.
     """
     token = serializers.CharField(source='key')
 
@@ -92,7 +92,7 @@ class UserConfirmSerializer(serializers.ModelSerializer):
 
 class UserPasswordSerializer(serializers.ModelSerializer):
     """
-    Serializer for changing client's or supplier's passwords.
+    Serializer for changing clients or suppliers passwords.
     """
     password = serializers.CharField(write_only=True, required=True)
 

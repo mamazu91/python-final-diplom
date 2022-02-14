@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -133,11 +134,7 @@ REST_FRAMEWORK = {
         'anon': '5/second',
         'user': '8/second'
     },
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'
-}
-
-SPECTACULAR_DEFAULTS = {
-    "PREPROCESSING_HOOKS": ["shop_backend.openapi.custom_preprocessing_hook"],
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 AUTH_USER_MODEL = 'contacts.User'
@@ -153,5 +150,6 @@ SERVER_EMAIL = EMAIL_HOST_USER
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Shop backend',
     'DESCRIPTION': 'Netology diploma by mamazu',
-    'VERSION': '1.0.0'
+    'VERSION': '1.0.0',
+    "PREPROCESSING_HOOKS": ["shop_backend.drf_spectacular_hooks.filter_swagger_paths"],
 }

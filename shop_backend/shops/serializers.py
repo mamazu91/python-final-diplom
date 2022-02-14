@@ -5,7 +5,6 @@ from rest_framework.exceptions import ValidationError
 from categories.models import Category, ShopCategory
 from products.models import Product, ProductInfo, Parameter, ParameterValue
 from django.db import transaction
-from orders.serializers import BasketSerializer
 
 
 class BaseShopSerializer(serializers.ModelSerializer):
@@ -97,10 +96,3 @@ class ShopStateSerializer(BaseShopSerializer):
 
     class Meta(BaseShopSerializer.Meta):
         fields = BaseShopSerializer.Meta.fields + ['is_closed']
-
-
-class ShopOrderSerializer(BaseShopSerializer):
-    orders = BasketSerializer(many=True, allow_null=True)
-
-    class Meta(BaseShopSerializer.Meta):
-        fields = BaseShopSerializer.Meta.fields + ['orders']

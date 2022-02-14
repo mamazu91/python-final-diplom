@@ -28,6 +28,8 @@ partner_router = DefaultRouter()
 partner_router.register('import', ShopImportViewSet, basename='shop_import')
 partner_router.register('states', ShopStateViewSet, basename='shops_states')
 partner_router.register('orders', UserOrderViewSet, basename='shop_orders')
+partner_router.register('pwd', UserPasswordViewSet, basename='password_change')
+
 
 client_router = DefaultRouter()
 client_router.register('reg', UserRegisterViewSet, basename='client_register')
@@ -43,10 +45,10 @@ shop_router.register('categories', CategoryViewSet, basename='categories')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/auth/', views.obtain_auth_token),
-    path('api/v1/', include(client_router.urls)),
-    path('api/v1/', include(shop_router.urls)),
+    path('api/v1/shop/', include(shop_router.urls)),
+    path('api/v1/common/auth/', views.obtain_auth_token),
     path('api/v1/partner/', include(partner_router.urls)),
+    path('api/v1/client/', include(client_router.urls)),
 
     # This route basically provides the schema.
     path('api/v1/schema/', SpectacularAPIView.as_view(), name='schema'),
