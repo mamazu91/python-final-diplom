@@ -14,14 +14,15 @@ from rest_framework.response import Response
                     "by providing id uniquely identifying the product. "
                     "Also returns list of all necessary details "
                     "about the product's availability in shops.",
-        responses={200: OpenApiResponse(response=ProductDetailsSerializer)},
+        responses={
+            200: OpenApiResponse(response=ProductDetailsSerializer),
+            404: OpenApiResponse(description='Product with this id was not found')
+        },
         tags=['common']
     ),
     list=extend_schema(
         summary='Get list of products in all shops',
-        description='Returns list of all products from all open shops. '
-                    'Products from shops with field is_closed equal to True '
-                    'are not going to be displayed. '
+        description='Get list of all products from all open shops. '
                     'Can be filtered by category_id or/and shop_id.',
         tags=['common']
     )

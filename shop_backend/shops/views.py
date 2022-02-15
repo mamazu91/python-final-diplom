@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiResponse
+from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiResponse, OpenApiParameter, OpenApiTypes
 from rest_framework.viewsets import ModelViewSet
 from .models import Shop
 from .serializers import BaseShopSerializer, ShopImportSerializer, ShopStateSerializer
@@ -13,8 +13,8 @@ from rest_framework.response import Response
     responses={
         201: OpenApiResponse(response=ShopImportSerializer),
         400: OpenApiResponse(description='Bad Request'),
-        401: OpenApiResponse(description='Unauthorized'),
-        403: OpenApiResponse(description='Forbidden')
+        401: OpenApiResponse(description='Header is missing authorization token'),
+        403: OpenApiResponse(description='Your account does not have enough permissions for this action')
     },
 )
 class ShopImportViewSet(ModelViewSet):
@@ -33,21 +33,51 @@ class ShopImportViewSet(ModelViewSet):
         summary='Get shop state',
         description='Get state of specific shop '
                     'by providing id uniquely identifying the shop.',
+        parameters=(
+                [
+                    OpenApiParameter(
+                        "id",
+                        OpenApiTypes.INT,
+                        OpenApiParameter.PATH,
+                        description='A unique integer value identifying the desired shop.'
+                    )
+                ]
+        ),
+        responses={
+            200: OpenApiResponse(response=ShopStateSerializer),
+            401: OpenApiResponse(description='Header is missing authorization token'),
+            403: OpenApiResponse(description='Your account does not have enough permissions for this action')
+        }
     ),
     list=extend_schema(
         summary='Get list of shops states',
         description='Get list of states of all shops associated with your account.',
+        responses={
+            200: OpenApiResponse(response=ShopStateSerializer),
+            401: OpenApiResponse(description='Header is missing authorization token'),
+            403: OpenApiResponse(description='Your account does not have enough permissions for this action')
+        }
     ),
     update=extend_schema(
         summary='Change shop state',
         description='Change state of specific shop '
                     'by providing id uniquely identifying the shop.',
+        parameters=(
+                [
+                    OpenApiParameter(
+                        "id",
+                        OpenApiTypes.INT,
+                        OpenApiParameter.PATH,
+                        description='A unique integer value identifying the desired shop.'
+                    )
+                ]
+        ),
         request={'application/json': ShopStateSerializer},
         responses={
             200: OpenApiResponse(response=ShopStateSerializer),
             400: OpenApiResponse(description='Bad Request'),
-            401: OpenApiResponse(description='Unauthorized'),
-            403: OpenApiResponse(description='Forbidden')
+            401: OpenApiResponse(description='Header is missing authorization token'),
+            403: OpenApiResponse(description='Your account does not have enough permissions for this action')
         },
     ),
 )
@@ -77,11 +107,15 @@ class ShopStateViewSet(ModelViewSet):
         summary='Get open shop',
         description='Get specific open shop '
                     'by providing id uniquely identifying the shop.',
+        responses={
+            200: OpenApiResponse(response=BaseShopSerializer),
+            404: OpenApiResponse(description='Shop with this id was not found')
+        },
         tags=['common']
     ),
     list=extend_schema(
         summary='Get list of open shops',
-        description='Get list of all existing and open shops.',
+        description='Get list of all existing open shops.',
         tags=['common']
     )
 )

@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiResponse
+from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiParameter, OpenApiTypes, OpenApiResponse
 from rest_framework.viewsets import ModelViewSet
 from .serializers import BasketSerializer, UserOrderSerializer
 from .permissions import IsAuthenticatedClient
@@ -22,18 +22,38 @@ from rest_framework.response import Response
                     "Specifying more positions than there is in stock is going to cause an error. "
                     "Product position is relation between specific shop and one of its product, "
                     "which can be obtained via endpoint api/v1/products/",
+        parameters=(
+                [
+                    OpenApiParameter(
+                        "id",
+                        OpenApiTypes.INT,
+                        OpenApiParameter.PATH,
+                        description='A unique integer value identifying your basket.'
+                    )
+                ]
+        )
     ),
     partial_update=extend_schema(
         summary="Empty basket",
-        description='Empty basket of specific client '
-                    'by providing id uniquely identifying the client.',
+        description='Empty basket by providing id uniquely identifying your basket.',
+        request=None,
+        parameters=(
+                [
+                    OpenApiParameter(
+                        "id",
+                        OpenApiTypes.INT,
+                        OpenApiParameter.PATH,
+                        description='A unique integer value identifying your basket.'
+                    )
+                ]
+        )
     )
 )
 @extend_schema(
     responses={
         200: OpenApiResponse(response=BasketSerializer),
-        401: OpenApiResponse(description='Unauthorized'),
-        403: OpenApiResponse(description='Forbidden')
+        401: OpenApiResponse(description='Header is missing authorization token'),
+        403: OpenApiResponse(description='Your account does not have enough permissions for this action')
     }
 )
 class BasketViewSet(ModelViewSet):
@@ -71,8 +91,8 @@ class BasketViewSet(ModelViewSet):
         description='Get list of your both open and closed orders.',
         responses={
             200: OpenApiResponse(response=UserOrderSerializer),
-            401: OpenApiResponse(description='Unauthorized'),
-            403: OpenApiResponse(description='Forbidden')
+            401: OpenApiResponse(description='Header is authorization missing token'),
+            403: OpenApiResponse(description='Your account does not have enough permissions for this action')
         }
     ),
     retrieve=extend_schema(exclude=True),
@@ -85,9 +105,10 @@ class BasketViewSet(ModelViewSet):
         responses={
             201: OpenApiResponse(response=UserOrderSerializer),
             400: OpenApiResponse(description='Bad Request'),
-            401: OpenApiResponse(description='Unauthorized'),
-            403: OpenApiResponse(description='Forbidden')
-        }
+            401: OpenApiResponse(description='Header is missing authorization token'),
+            403: OpenApiResponse(description='Your account does not have enough permissions for this action')
+        },
+        tags=['client']
     )
 )
 class UserOrderViewSet(ModelViewSet):

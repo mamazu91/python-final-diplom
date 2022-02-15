@@ -16,7 +16,7 @@ from shops.permissions import IsAuthenticatedSupplier
     request={'application/json': UserRegisterSerializer},
     responses={
         201: OpenApiResponse(response=UserRegisterSerializer),
-        400: OpenApiResponse(description='Bad Request')
+        400: OpenApiResponse(description='Request body is incorrect')
     }
 )
 class UserRegisterViewSet(ModelViewSet):
@@ -36,7 +36,7 @@ class UserRegisterViewSet(ModelViewSet):
     request={'application/json': UserConfirmSerializer},
     responses={
         201: OpenApiResponse(response=UserConfirmSerializer),
-        400: OpenApiResponse(description='Bad Request')
+        400: OpenApiResponse(description='Request body is incorrect')
     }
 )
 class UserConfirmViewSet(ModelViewSet):
@@ -57,9 +57,9 @@ class UserConfirmViewSet(ModelViewSet):
     request={'application/json': UserPasswordSerializer},
     responses={
         200: OpenApiResponse(response=UserPasswordSerializer),
-        400: OpenApiResponse(description='Bad Request'),
-        401: OpenApiResponse(description='Unauthorized'),
-        403: OpenApiResponse(description='Forbidden')
+        400: OpenApiResponse(description='Request body is incorrect'),
+        401: OpenApiResponse(description='Header is missing authorization token'),
+        403: OpenApiResponse(description='Your account does not have enough permissions for this action')
     },
 )
 class UserPasswordViewSet(ModelViewSet):

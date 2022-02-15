@@ -1,4 +1,4 @@
-from drf_spectacular.utils import extend_schema_view, extend_schema
+from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiResponse
 from rest_framework.viewsets import ModelViewSet
 from .models import Category
 from .serializers import CategorySerializer
@@ -9,6 +9,10 @@ from .serializers import CategorySerializer
         summary='Get product category',
         description='Get specific product category '
                     'by providing id uniquely identifying the category.',
+        responses={
+            200: OpenApiResponse(response=CategorySerializer),
+            404: OpenApiResponse(description='Category with this id was not found')
+        },
         tags=['common']
     ),
     list=extend_schema(

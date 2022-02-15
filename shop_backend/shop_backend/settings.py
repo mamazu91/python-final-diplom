@@ -151,10 +151,9 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'Shop backend',
     'DESCRIPTION': 'Netology diploma by mamazu',
     'VERSION': '1.0.0',
-    'PREPROCESSING_HOOKS': ['shop_backend.drf_spectacular_hooks.filter_swagger_paths'],
+    # 'PREPROCESSING_HOOKS': ['shop_backend.drf_spectacular_hooks.filter_swagger_paths'],
     'SWAGGER_UI_SETTINGS': {
         'persistAuthorization': True
     },
     'SERVE_INCLUDE_SCHEMA': False,
-    # 'SCHEMA_PATH_PREFIX': ''
 }

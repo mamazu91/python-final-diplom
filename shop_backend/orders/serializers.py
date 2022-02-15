@@ -2,6 +2,7 @@ from rest_framework import serializers
 from orders.models import Order, OrderContent
 from products.models import ProductInfo
 from rest_framework.exceptions import ValidationError
+from drf_spectacular.utils import extend_schema_field, OpenApiTypes
 from django.db.models import F, Sum
 from django.db import transaction
 from django.shortcuts import get_object_or_404
@@ -34,6 +35,7 @@ class BasketSerializer(serializers.ModelSerializer):
         fields = ['id', 'total', 'positions']
 
     @staticmethod
+    @extend_schema_field(OpenApiTypes.INT)
     def get_total(obj):
         order_total = Order.objects.filter(id=obj.id).aggregate(
             total=(Sum(F('contents__quantity') * F('positions__price'))))
