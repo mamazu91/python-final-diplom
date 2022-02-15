@@ -9,6 +9,6 @@ class Shop(models.Model):
     is_closed = models.BooleanField(verbose_name='Статус заказов', default=False)
 
     class Meta:
-        verbose_name = 'Магазин'
-        verbose_name_plural = 'Список магазинов'
+        verbose_name = 'shop'
+        verbose_name_plural = 'shops list'
         ordering = ['-name']

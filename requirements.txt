@@ -5,3 +5,8 @@ djangorestframework
 requests
 pyyaml
 django-filter
+pytest
+pytest-django
+model_bakery
+pytest-cov
+drf-spectacular

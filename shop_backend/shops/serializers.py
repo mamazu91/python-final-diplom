@@ -5,24 +5,30 @@ from rest_framework.exceptions import ValidationError
 from categories.models import Category, ShopCategory
 from products.models import Product, ProductInfo, Parameter, ParameterValue
 from django.db import transaction
-from orders.serializers import BasketSerializer
 
 
-class ShopSerializer(serializers.ModelSerializer):
+class BaseShopSerializer(serializers.ModelSerializer):
+    """
+    Base shop serializer that exposes only those fields that every shop must have.
+    To add some other fields, inherit from this serializer.
+    """
     class Meta:
         model = Shop
         fields = ['id', 'name']
         read_only_fields = ['id', 'name']
 
 
-class ShopImportSerializer(ShopSerializer):
-    class Meta(ShopSerializer.Meta):
-        fields = ShopSerializer.Meta.fields + ['filename']
+class ShopImportSerializer(BaseShopSerializer):
+    """
+    Serializer for importing shops-related data from yaml files.
+    """
+    class Meta(BaseShopSerializer.Meta):
+        fields = BaseShopSerializer.Meta.fields + ['filename']
 
     def create(self, validated_data):
         price_list = price_list_to_yaml(validated_data.get('filename'))
 
-        # Creating new shop from price list yaml file content
+        # Creating new shop from price list yaml file content.
         with transaction.atomic():
             new_shop, is_new_shop_created = Shop.objects.get_or_create(
                 name=price_list.get('shop'),
@@ -32,13 +38,12 @@ class ShopImportSerializer(ShopSerializer):
                 }
             )
             if not is_new_shop_created:
-                raise ValidationError({'name': ['Shop with this name already exists.']})
+                raise ValidationError({'results': ['Shop with this name already exists.']})
 
-            # Creating new categories from price list yaml file content
+            # Creating new categories from price list yaml file content.
             for category in price_list.get('categories'):
                 new_category, _ = Category.objects.get_or_create(
-                    name=category.get('name'),
-
+                    name=category.get('name')
                 )
 
                 new_shop_category = ShopCategory(
@@ -48,7 +53,7 @@ class ShopImportSerializer(ShopSerializer):
                 )
                 new_shop_category.save()
 
-            # Creating new products from price list yaml file content
+            # Creating new products from price list yaml file content.
             for product in price_list.get('goods'):
                 new_product_category = ShopCategory.objects.get(internal_category_id=product.get('category'))
                 new_product, _ = Product.objects.get_or_create(
@@ -68,7 +73,7 @@ class ShopImportSerializer(ShopSerializer):
                 )
                 new_product_info.save()
 
-                # Creating new parameters from price list yaml file content
+                # Creating new parameters from price list yaml file content.
                 for parameter, value in product['parameters'].items():
                     new_parameter, _ = Parameter.objects.get_or_create(
                         name=parameter
@@ -83,14 +88,11 @@ class ShopImportSerializer(ShopSerializer):
             return new_shop
 
 
-class ShopStateSerializer(ShopSerializer):
-    class Meta(ShopSerializer.Meta):
-        fields = ShopSerializer.Meta.fields + ['is_closed']
-        write_only_field = ['is_closed']
+class ShopStateSerializer(BaseShopSerializer):
+    """
+    Serializer for retrieving, listing and modifying shops states (from closed to open, or vice versa).
+    """
+    is_closed = serializers.BooleanField(required=True)
 
-
-class ShopOrderSerializer(ShopSerializer):
-    orders = BasketSerializer(many=True, allow_null=True)
-
-    class Meta(ShopSerializer.Meta):
-        fields = ShopSerializer.Meta.fields + ['orders']
+    class Meta(BaseShopSerializer.Meta):
+        fields = BaseShopSerializer.Meta.fields + ['is_closed']

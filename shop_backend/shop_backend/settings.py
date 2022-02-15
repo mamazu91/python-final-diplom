@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'categories',
     'products',
     'contacts',
-    'orders'
+    'orders',
+    'drf_spectacular'
 ]
 
 MIDDLEWARE = [
@@ -111,13 +112,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
-USE_L10N = True
-
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
@@ -129,15 +125,35 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication'
     ],
-    'DATETIME_FORMAT': "%m.%d.%Y %H:%M:%S"
+    'DATETIME_FORMAT': "%m.%d.%Y %H:%M:%S",
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '5/second',
+        'user': '8/second'
+    },
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 AUTH_USER_MODEL = 'contacts.User'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.mail.yahoo.com'
-EMAIL_HOST_USER = ''
+EMAIL_HOST_USER = 'basketman91@yahoo.com'
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = '465'
 EMAIL_USE_SSL = True
 SERVER_EMAIL = EMAIL_HOST_USER
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Shop backend',
+    'DESCRIPTION': 'Netology diploma by mamazu',
+    'VERSION': '1.0.0',
+    # 'PREPROCESSING_HOOKS': ['shop_backend.drf_spectacular_hooks.filter_swagger_paths'],
+    'SWAGGER_UI_SETTINGS': {
+        'persistAuthorization': True
+    },
+    'SERVE_INCLUDE_SCHEMA': False,
+}

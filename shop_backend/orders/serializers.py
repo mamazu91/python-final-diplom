@@ -2,6 +2,7 @@ from rest_framework import serializers
 from orders.models import Order, OrderContent
 from products.models import ProductInfo
 from rest_framework.exceptions import ValidationError
+from drf_spectacular.utils import extend_schema_field, OpenApiTypes
 from django.db.models import F, Sum
 from django.db import transaction
 from django.shortcuts import get_object_or_404
@@ -9,13 +10,10 @@ from django.core.mail import send_mail as send_new_order_mail
 from shop_backend import settings
 
 
-class OrderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Order
-        fields = ['id', 'created_at']
-
-
 class BasketPositionSerializer(serializers.ModelSerializer):
+    """
+    Serializer for products positions in clients baskets.
+    """
     id = serializers.IntegerField(source='product_info.id')
     name = serializers.SlugRelatedField(read_only=True, slug_field='name', source='product_info.product')
     price = serializers.SlugRelatedField(read_only=True, slug_field='price', source='product_info')
@@ -26,6 +24,9 @@ class BasketPositionSerializer(serializers.ModelSerializer):
 
 
 class BasketSerializer(serializers.ModelSerializer):
+    """
+    Serializer for clients baskets.
+    """
     positions = BasketPositionSerializer(many=True, source='contents')
     total = serializers.SerializerMethodField('get_total')
 
@@ -34,6 +35,7 @@ class BasketSerializer(serializers.ModelSerializer):
         fields = ['id', 'total', 'positions']
 
     @staticmethod
+    @extend_schema_field(OpenApiTypes.INT)
     def get_total(obj):
         order_total = Order.objects.filter(id=obj.id).aggregate(
             total=(Sum(F('contents__quantity') * F('positions__price'))))
@@ -65,6 +67,9 @@ class BasketSerializer(serializers.ModelSerializer):
 
 
 class UserOrderSerializer(serializers.ModelSerializer):
+    """
+    Serializer for orders of both suppliers and clients.
+    """
     positions = BasketPositionSerializer(read_only=True, many=True, required=False, source='contents')
     total = serializers.SerializerMethodField('get_total', required=False)
     delivery_address = serializers.CharField(required=True)
@@ -72,6 +77,7 @@ class UserOrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['id', 'total', 'status', 'positions', 'delivery_address']
+        read_only_fields = ['id', 'total', 'status', 'positions']
 
     @staticmethod
     def get_total(obj):
