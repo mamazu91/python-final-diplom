@@ -49,10 +49,12 @@ urlpatterns = [
     path('api/v1/partner/', include(partner_router.urls)),
     path('api/v1/client/', include(client_router.urls)),
 
-    # This route basically provides the schema.
+    # Drf-spectacular module route. This route basically provides the schema.
     path('api/v1/schema/', SpectacularAPIView.as_view(), name='schema'),
 
-    # And this route creates a UI out of the schema above.
-    path('api/v1/ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui')
+    # Drf-spectacular module route. And this route creates a UI out of the schema above.
+    path('api/v1/ui/', SpectacularSwaggerView.as_view(url_name='schema'), name='swagger-ui'),
 
+    # Django-allauth module route
+    path('accounts/', include('allauth.urls'))
 ]

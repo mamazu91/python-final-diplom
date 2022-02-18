@@ -38,6 +38,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_confirmed = models.BooleanField(default=False)
     objects = UserManager()
     email = models.EmailField('email address', unique=True)
+    username = models.CharField(max_length=50, verbose_name='Ник', blank=True)
     first_name = models.CharField(max_length=50, verbose_name='Имя')
     middle_name = models.CharField(max_length=50, verbose_name='Отчество')
     last_name = models.CharField(max_length=50, verbose_name='Фамилия')

@@ -5,6 +5,7 @@ from drf_spectacular.utils import extend_schema, OpenApiResponse
 from rest_framework.authtoken.models import Token
 from contacts.permissions import IsAuthenticatedClient
 from shops.permissions import IsAuthenticatedSupplier
+from rest_framework.response import Response
 
 
 @extend_schema(
@@ -71,5 +72,12 @@ class UserPasswordViewSet(ModelViewSet):
     permission_classes = [IsAuthenticatedClient | IsAuthenticatedSupplier]
     http_method_names = ['patch']
 
-    def get_queryset(self):
-        return User.objects.filter(email=self.request.user)
+    def get_object(self):
+        return User.objects.get(email=self.request.user)
+
+    def patch(self, request):
+        instance = self.get_object()
+        serializer = super().get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
