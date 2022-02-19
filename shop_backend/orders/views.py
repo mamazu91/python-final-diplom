@@ -1,6 +1,6 @@
 from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiParameter, OpenApiTypes, OpenApiResponse
 from rest_framework.viewsets import ModelViewSet
-from .serializers import BasketSerializer, UserOrderSerializer
+from .serializers import ClientBasketSerializer, UserOrderSerializer
 from .permissions import IsAuthenticatedClient
 from .models import Order
 from django.http import HttpResponseNotFound
@@ -11,31 +11,30 @@ from rest_framework.response import Response
 
 @extend_schema_view(
     list=extend_schema(
-        summary="Get basket content",
+        summary='Get basket content',
         description='Get list of products positions in your basket, including their total.',
     ),
     retrieve=extend_schema(exclude=True),
     update=extend_schema(
-        summary="Add products positions to basket",
-        description="Add products positions to basket "
-                    "by providing id uniquely identifying your basket. "
-                    "Specifying more positions than there is in stock is going to cause an error. "
-                    "Product position is relation between specific shop and one of its product, "
-                    "which can be obtained via endpoint api/v1/products/",
+        summary='Add products positions to basket',
+        description='Add products positions to your basket. '
+                    'Specifying more positions than there is in stock is going to cause an error. '
+                    'Product position is relation between specific shop and one of its products, '
+                    'which can be obtained via endpoint api/v1/products/',
         parameters=(
                 [
                     OpenApiParameter(
                         "id",
                         OpenApiTypes.INT,
                         OpenApiParameter.PATH,
-                        description='A unique integer value identifying your basket.'
+                        exclude=True
                     )
                 ]
         )
     ),
     partial_update=extend_schema(
-        summary="Empty basket",
-        description='Empty basket by providing id uniquely identifying your basket.',
+        summary='Empty basket',
+        description='Empty content of your basket.',
         request=None,
         parameters=(
                 [
@@ -43,7 +42,7 @@ from rest_framework.response import Response
                         "id",
                         OpenApiTypes.INT,
                         OpenApiParameter.PATH,
-                        description='A unique integer value identifying your basket.'
+                        exclude=True
                     )
                 ]
         )
@@ -51,19 +50,22 @@ from rest_framework.response import Response
 )
 @extend_schema(
     responses={
-        200: OpenApiResponse(response=BasketSerializer),
+        200: OpenApiResponse(response=ClientBasketSerializer),
         401: OpenApiResponse(description='Header is missing authorization token'),
         403: OpenApiResponse(description='Your account does not have enough permissions for this action')
     }
 )
-class BasketViewSet(ModelViewSet):
+class ClientBasketViewSet(ModelViewSet):
     """
     ModelViewSet for retrieving, emptying and modifying clients baskets.
-    Endpoint: /api/v1/basket/
+    Endpoint: /api/v1/client/basket/
     """
-    serializer_class = BasketSerializer
+    serializer_class = ClientBasketSerializer
     permission_classes = [IsAuthenticatedClient]
     http_method_names = ['get', 'put', 'patch']
+
+    def get_object(self):
+        return Order.objects.get(user=self.request.user, status='basket')
 
     def get_queryset(self):
         return Order.objects.filter(user=self.request.user, status='basket')
@@ -71,17 +73,18 @@ class BasketViewSet(ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         return HttpResponseNotFound
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
+    def put(self, request):
         instance = self.get_object()
-        serializer = super().get_serializer(instance, data=request.data, partial=partial)
+        serializer = super().get_serializer(instance, data=request.data, partial=False)
         serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        return Response(serializer.data)
 
-        if partial:
-            instance.contents.all().delete()
-        else:
-            self.perform_update(serializer)
-
+    def patch(self, request):
+        instance = self.get_object()
+        serializer = super().get_serializer(instance, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        instance.contents.all().delete()
         return Response(serializer.data)
 
 

@@ -1,13 +1,13 @@
-from drf_spectacular.utils import extend_schema_view, extend_schema, OpenApiResponse, OpenApiParameter, OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiResponse, extend_schema_view, OpenApiParameter, OpenApiTypes
 from rest_framework.viewsets import ModelViewSet
 from .models import Shop
-from .serializers import BaseShopSerializer, ShopImportSerializer, ShopStateSerializer
+from .serializers import ShopImportSerializer, ShopStateSerializer, BaseShopSerializer
 from .permissions import IsAuthenticatedSupplier
 from rest_framework.response import Response
 
 
 @extend_schema(
-    summary="Import shop-related data from a yaml file",
+    summary='Import shop-related data from a yaml file',
     description='File must at least contain information on shop, its categories, and their goods.',
     request={'application/json': ShopImportSerializer},
     responses={
@@ -31,15 +31,14 @@ class ShopImportViewSet(ModelViewSet):
 @extend_schema_view(
     retrieve=extend_schema(
         summary='Get shop state',
-        description='Get state of specific shop '
-                    'by providing id uniquely identifying the shop.',
+        description='Get state of specific shop by providing id uniquely identifying this shop.',
         parameters=(
                 [
                     OpenApiParameter(
                         "id",
                         OpenApiTypes.INT,
                         OpenApiParameter.PATH,
-                        description='A unique integer value identifying the desired shop.'
+                        description='A unique integer value identifying this shop.'
                     )
                 ]
         ),
@@ -60,15 +59,14 @@ class ShopImportViewSet(ModelViewSet):
     ),
     update=extend_schema(
         summary='Change shop state',
-        description='Change state of specific shop '
-                    'by providing id uniquely identifying the shop.',
+        description='Change state of specific shop by providing id uniquely identifying this shop.',
         parameters=(
                 [
                     OpenApiParameter(
                         "id",
                         OpenApiTypes.INT,
                         OpenApiParameter.PATH,
-                        description='A unique integer value identifying the desired shop.'
+                        description='A unique integer value identifying this shop.'
                     )
                 ]
         ),
@@ -105,8 +103,7 @@ class ShopStateViewSet(ModelViewSet):
 @extend_schema_view(
     retrieve=extend_schema(
         summary='Get open shop',
-        description='Get specific open shop '
-                    'by providing id uniquely identifying the shop.',
+        description='Get specific open shop by providing id uniquely identifying this shop.',
         responses={
             200: OpenApiResponse(response=BaseShopSerializer),
             404: OpenApiResponse(description='Shop with this id was not found')
@@ -122,7 +119,7 @@ class ShopStateViewSet(ModelViewSet):
 class OpenShopViewSet(ModelViewSet):
     """
     ModelViewSet for retrieving and listing open shops.
-    Endpoint: /api/v1/shop/shops/
+    Endpoint: /api/v1/shops/
     """
     queryset = Shop.objects.filter(is_closed=False)
     serializer_class = BaseShopSerializer

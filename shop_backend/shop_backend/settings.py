@@ -38,13 +38,44 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework',
     'rest_framework.authtoken',
+
+    # Https related app
+    'django_extensions',
+
+    # My custom apps
     'shops',
     'categories',
     'products',
     'contacts',
     'orders',
-    'drf_spectacular'
+
+    # Drf-spectacular module app
+    'drf_spectacular',
+
+    # Django-allauth module apps
+    'django.contrib.sites',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook'
 ]
+
+# Django-allauth module settings
+SITE_ID = 5
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_AUTHENTICATION_METHOD = 'username'
+
+# Drf-spectacular settings
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Shop backend',
+    'DESCRIPTION': 'Netology diploma by mamazu',
+    'VERSION': '1.0.0',
+    'PREPROCESSING_HOOKS': ['shop_backend.schema.filter_swagger_paths'],
+    'SWAGGER_UI_SETTINGS': {
+        'persistAuthorization': True
+    },
+    'SERVE_INCLUDE_SCHEMA': False
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -78,6 +109,8 @@ WSGI_APPLICATION = 'shop_backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 DATABASES = {
     'default': {
@@ -121,6 +154,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend'
+]
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication'
@@ -146,14 +184,3 @@ EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = '465'
 EMAIL_USE_SSL = True
 SERVER_EMAIL = EMAIL_HOST_USER
-
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'Shop backend',
-    'DESCRIPTION': 'Netology diploma by mamazu',
-    'VERSION': '1.0.0',
-    # 'PREPROCESSING_HOOKS': ['shop_backend.drf_spectacular_hooks.filter_swagger_paths'],
-    'SWAGGER_UI_SETTINGS': {
-        'persistAuthorization': True
-    },
-    'SERVE_INCLUDE_SCHEMA': False,
-}

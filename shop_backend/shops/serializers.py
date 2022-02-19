@@ -1,10 +1,10 @@
 from rest_framework import serializers
-from .utils import price_list_to_yaml
+from django.db import transaction
 from .models import Shop
+from .utils import price_list_to_yaml
 from rest_framework.exceptions import ValidationError
 from categories.models import Category, ShopCategory
 from products.models import Product, ProductInfo, Parameter, ParameterValue
-from django.db import transaction
 
 
 class BaseShopSerializer(serializers.ModelSerializer):
