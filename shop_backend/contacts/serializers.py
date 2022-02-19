@@ -9,7 +9,7 @@ from shop_backend import settings
 from django.shortcuts import get_object_or_404
 
 
-class UserRegisterSerializer(serializers.ModelSerializer):
+class ClientRegisterSerializer(serializers.ModelSerializer):
     """
     Serializer for registering clients.
     """
@@ -66,7 +66,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         return data
 
 
-class UserConfirmSerializer(serializers.ModelSerializer):
+class ClientEmailConfirmSerializer(serializers.ModelSerializer):
     """
     Serializer for confirming clients emails.
     """
@@ -90,7 +90,7 @@ class UserConfirmSerializer(serializers.ModelSerializer):
         return db_token
 
 
-class UserPasswordSerializer(serializers.ModelSerializer):
+class PasswordChangeSerializer(serializers.ModelSerializer):
     """
     Serializer for changing clients or suppliers passwords.
     """

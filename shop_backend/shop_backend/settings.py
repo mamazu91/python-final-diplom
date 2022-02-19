@@ -70,7 +70,7 @@ SPECTACULAR_SETTINGS = {
     'TITLE': 'Shop backend',
     'DESCRIPTION': 'Netology diploma by mamazu',
     'VERSION': '1.0.0',
-    # 'PREPROCESSING_HOOKS': ['shop_backend.schema.filter_swagger_paths'],
+    'PREPROCESSING_HOOKS': ['shop_backend.schema.filter_swagger_paths'],
     'SWAGGER_UI_SETTINGS': {
         'persistAuthorization': True
     },
@@ -109,6 +109,8 @@ WSGI_APPLICATION = 'shop_backend.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 DATABASES = {
     'default': {

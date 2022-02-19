@@ -23,7 +23,7 @@ class BasketPositionSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'price', 'quantity', 'status']
 
 
-class BasketSerializer(serializers.ModelSerializer):
+class ClientBasketSerializer(serializers.ModelSerializer):
     """
     Serializer for clients baskets.
     """
@@ -42,7 +42,7 @@ class BasketSerializer(serializers.ModelSerializer):
         return order_total['total']
 
     def update(self, instance, validated_data):
-        basket_positions = validated_data.pop('contents')
+        basket_positions = validated_data.pop('contents', None)
         if not basket_positions:
             raise ValidationError({'results': ['You need to add at least one position to basket.']})
 
