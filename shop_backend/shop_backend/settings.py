@@ -61,15 +61,15 @@ INSTALLED_APPS = [
 ]
 
 # Django-allauth module settings
-SITE_ID = 5
+SITE_ID = 2
 ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_AUTHENTICATION_METHOD = 'username'
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
 
 # Drf-spectacular settings
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Shop backend',
     'DESCRIPTION': 'Netology diploma by mamazu',
-    'VERSION': '1.0.0',
+    'VERSION': '1.1.0',
     'PREPROCESSING_HOOKS': ['shop_backend.schema.filter_swagger_paths'],
     'SWAGGER_UI_SETTINGS': {
         'persistAuthorization': True
