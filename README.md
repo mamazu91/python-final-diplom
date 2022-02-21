@@ -1,8 +1,3 @@
-# Документация
-- [API клиента](https://github.com/mamazu91/python-final-diplom/blob/master/docs/client.md)
-- [API поставщика](https://github.com/mamazu91/python-final-diplom/blob/master/docs/supplier.md)
-- [Permissions](https://github.com/mamazu91/python-final-diplom/blob/master/docs/permissions.md)
-- [API spec](https://documenter.getpostman.com/view/14306153/UVXjKbto)
 # Требования
 - python >= 3.10
 - django
@@ -12,6 +7,11 @@
 - requests
 - pyyaml
 - django-filter
+- pytest
+- pytest-django
+- model_bakery
+- pytest-cov
+- drf-spectacular
 
 # Установка
 1. Скачать проект
